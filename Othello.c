@@ -1,21 +1,6 @@
 #include<stdio.h>
 #include<stdbool.h>
 
-//parte de render tablero
-// if(i == player[0].coord[coordIndexP1].x && j == player[0].coord[coordIndexP1].y){
-//   printf(" %c ", player[0].ficha);
-//   coordIndexP1++;//si se encontro una ficha se aumenta el indice del array de coordenadas, para buscar mas
-// }else if(i == player[0].coord[turno].x && j == player[0].coord[turno].y){
-//   printf(" %c ", player[0].ficha);
-// }else if(i == player[1].coord[coordIndexP2].x && j == player[1].coord[coordIndexP2].y){
-//   printf(" %c ", player[1].ficha);
-//   coordIndexP2++;//si se encontro una ficha se aumenta el indice del array de coordenadas, para buscar mas
-
-
-//movimientosPosibles (fichas, nro_movimiento)
-//-validar jugadas
-//-validar ganador si no hay jugadas
-
 typedef struct {
   int x;
   int y;
@@ -67,7 +52,12 @@ void movimientosPosible(jugador player[], tablero* tab, jugadaPosible jugadaPosi
     }
   }
 
+  printf("Coordenadas validas: -- -- -- -- ");
   //guardarlo en el array de jugadas posibles
+  //EJEMPLO: para las O [4-4] las jugadas posibles son [6-4]Vb [4-6]Hr
+  //EJEMPLO: para las O [5-5] las jugadas posibles son [5-3]Hl [3-5]Vt
+  //el usuario debe ingresar estas coordenadas ( [6-4] [4-6] [5-3] [3-5] ) 
+  //cualquiera coordenada fuera de estas NO es valida
 }
 
 void validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
@@ -85,16 +75,18 @@ void validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
  * Deberia tomar como valores una coordenada de inicio, una coordenada de fin y una direccion
  * y modificar todas las fichas que se vean afectadas en la jugada
  */
-void ingresarJugada(jugador player[], tablero* tab, int id, int coord_x, int coord_y) {
+void ingresarJugada(jugador player[], int id, tablero* tab, jugadaPosible* play) {
   //aumenta el contador de turno 
   player[id].turno+=1;
   int turn = player[id].turno;
   char ficha = player[id].ficha;
-  int x = coord_x;
-  int y = coord_y;
+  int x_inicio = play->coord_inicio.x;
+  int y_inicio = play->coord_inicio.y;
+  int x_fin = play->coord_fin.x;
+  int y_fin = play->coord_fin.y;
 
-  tab->jugada[tab->nro_turno].x = x;
-  tab->jugada[tab->nro_turno].y = y;
+  tab->jugada[tab->nro_turno].x = x_inicio;
+  tab->jugada[tab->nro_turno].y = y_inicio;
   tab->jugada[tab->nro_turno].ficha = ficha;
   tab->nro_turno++;
 }
@@ -105,9 +97,9 @@ char asignarFicha(int option){
   char ficha;
   for (int i = 1; i <= 2; i++){
     if(option == 0){
-      ficha = '!';
+      ficha = 'X';
     }else if(option == 1){
-      ficha = '!';
+      ficha = 'O';
     }
   }
   return ficha;
@@ -143,7 +135,7 @@ void crearJugador(jugador player[], int tope) {
     printf("Nombre: ");
     scanf("%s", player[i].nombre);
     player[i].ficha = asignarFicha(i);
-    player[i].turno = 1;
+    player[i].turno = 0;
     player[i].id = i;
     printf("\n");
   }
@@ -228,40 +220,21 @@ void showInfo(jugador player[]){
   printf("\n\n");
 }
 
+//FUNCION PARA CONTAR FICHAS EN TABLERO??
+
 // MAIN ************************************************************************************************
 int main() {
   jugador jugadores[2];
   tablero tab;
+  jugadaPosible play;
 
   crearJugador(jugadores, 2);
 
   iniciarTablero(&tab);
 
-  showInfo(jugadores);
-
-  renderTablero(&tab);
-
   int primerTurno = darTurno(jugadores);
 
-  ingresarJugada(jugadores, &tab, 0, 4, 3);
-
-  renderTablero(&tab);
-
-  showInfo(jugadores);
-
-  ingresarJugada(jugadores, &tab, 1, 5, 6);
-
-  renderTablero(&tab);
-
-  showInfo(jugadores);
-  
-  ingresarJugada(jugadores, &tab, 0, 3, 4);
-
-  renderTablero(&tab);
-
-  showInfo(jugadores);
-
-  ingresarJugada(jugadores, &tab, 1, 6, 5);
+  ingresarJugada(jugadores, 0, &tab, &play); //OJO ACA
 
   renderTablero(&tab);
 
