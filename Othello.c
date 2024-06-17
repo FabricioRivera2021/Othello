@@ -29,8 +29,7 @@ typedef struct {
 
 //MOVIMIENTOS POSIBLES
 void movimientosPosible(jugador player[], tablero* tab, jugadaPosible jugadaPosibles[]) {
-  /*
-  si ficha igual entonces
+  /* si ficha igual entonces
   EJ: cordenada 4-4 -> buscar en las coordenadas adyacentes (8 coordenadas)
   * Horizontales: [4-3]Hl [4-5]Hr
   * Verticales: [3-4]Vt [5-4]Vb
@@ -157,16 +156,17 @@ void ingresarJugada(jugador player[], int id, tablero* tab, jugadaPosible* play)
 
 //actualmente asignar ficha ingresa una "X" si el indice del jugador es 0
 // y una "O" si el indice es 1. hay que hacerlo ALEATORIO
-char asignarFicha(int option){
-  char ficha;
-  for (int i = 1; i <= 2; i++){
-    if(option == 0){
-      ficha = 'X';
-    }else if(option == 1){
-      ficha = 'O';
-    }
+void asignarFicha(jugador player[]){
+  double valor = (double)rand() / (double)RAND_MAX;
+  char reultFicha = (valor >= 0.5) ? 'X' : 'O';
+
+  if(resultFicha == 'X'){
+    player[0].ficha = 'X';
+    player[1].ficha = 'O';
+  }else{
+    player[0].ficha = 'O';
+    player[1].ficha = 'X';
   }
-  return ficha;
 }
 
 //INICIAR TABLERO
