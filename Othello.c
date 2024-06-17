@@ -58,9 +58,16 @@ void movimientosPosible(jugador player[], tablero* tab, jugadaPosible jugadaPosi
       /* buscar ficha igual a la del jugador actual */
       for (int k = 0; k < 64; k++){
         if (i == tab->jugada[k].x && j == tab->jugada[k].y && tab->jugada[k].ficha == ficha_a_buscar){
+          printf("coordenadas con X: %d - %d\n", tab->jugada[k].x + 1, tab->jugada[k].y + 1);
+          int search = 0;
+          while(search < 64){
+            if(tab->jugada[search].x == tab->jugada[k].x - 1 && tab->jugada[search].y == tab->jugada[k].y - 1){
+              printf("Encontrada diagonal superior izquierda en... %d - %d | %c", tab->jugada[search].x + 1, tab->jugada[search].y + 1, tab->jugada[search].ficha);
+            }
+            search++;
+          }
           // coordenada_a_probar[k].x = tab->jugada[k].x;
           // coordenada_a_probar[k].y = tab->jugada[k].y;
-          printf("coordenadas con X: %d - %d\n", tab->jugada[k].x, tab->jugada[k].y);
 
           // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x - 1, tab->jugada[k].y - 1);
           // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x - 1, tab->jugada[k].y);
@@ -70,38 +77,38 @@ void movimientosPosible(jugador player[], tablero* tab, jugadaPosible jugadaPosi
           // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x + 1, tab->jugada[k].y - 1);
           // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x + 1, tab->jugada[k].y);
           // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x + 1, tab->jugada[k].y + 1);
-          break;
+          // break;
           // printf("coordenada a probar %d - %d\n", coordenada_a_probar[k].x, coordenada_a_probar[k].y);
           // break;//si hay ficha break
-        }else if(i == tab->jugada[k].x && j == tab->jugada[k].y && tab->jugada[k].ficha == ficha_oponente){
-          printf("coordenadas con O: %d - %d\n", tab->jugada[k].x, tab->jugada[k].y);
+        // }else if(i == tab->jugada[k].x && j == tab->jugada[k].y && tab->jugada[k].ficha == ficha_oponente){
+        //   printf("coordenadas con O: %d - %d\n", tab->jugada[k].x, tab->jugada[k].y);
 
-          if(i - 1 == tab->jugada[k].x - 1 && j - 1 == tab->jugada[k].y - 1 && tab->jugada[k].ficha){
-            printf("coordenadas a probar ---- %d - %d --index: %d --ficha: %c\n", tab->jugada[k].x - 1, tab->jugada[k].y - 1, k, tab->jugada[k].ficha);
-          }
-          if(i - 1 == tab->jugada[k].x - 1 && j == tab->jugada[k].y && tab->jugada[k].ficha){
-            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x - 1, tab->jugada[k].y, k, tab->jugada[k].ficha);
-          }
-          if(i - 1 == tab->jugada[k].x - 1 && j + 1 == tab->jugada[k].y + 1 && tab->jugada[k].ficha){
-            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x - 1, tab->jugada[k].y + 1, k, tab->jugada[k].ficha);
-          }
-          if(i == tab->jugada[k].x && j - 1 == tab->jugada[k].y - 1 && tab->jugada[k].ficha){
-            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x, tab->jugada[k].y - 1, k, tab->jugada[k].ficha);
-          }
-          if(i == tab->jugada[k].x && j + 1 == tab->jugada[k].y + 1 && tab->jugada[k].ficha){
-            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x, tab->jugada[k].y + 1, k, tab->jugada[k].ficha);
-          }
-          if(i + 1 == tab->jugada[k].x + 1 && j - 1 == tab->jugada[k].y - 1 && tab->jugada[k].ficha){
-            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x + 1, tab->jugada[k].y - 1, k, tab->jugada[k].ficha);
-          }
-          if(i + 1 == tab->jugada[k].x + 1 && j == tab->jugada[k].y && tab->jugada[k].ficha){
-            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x + 1, tab->jugada[k].y, k, tab->jugada[k].ficha);
-          }
-          if(i + 1 == tab->jugada[k].x + 1 && j + 1 == tab->jugada[k].y + 1 && tab->jugada[k].ficha){
-            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x + 1, tab->jugada[k].y + 1, k, tab->jugada[k].ficha);
-          }
-          break;
-        }
+        //   if(i - 1 == tab->jugada[k].x - 1 && j - 1 == tab->jugada[k].y - 1 && tab->jugada[k].ficha){
+        //     printf("coordenadas a probar ---- %d - %d --index: %d --ficha: %c\n", tab->jugada[k].x - 1, tab->jugada[k].y - 1, k, tab->jugada[k].ficha);
+        //   }
+        //   if(i - 1 == tab->jugada[k].x - 1 && j == tab->jugada[k].y && tab->jugada[k].ficha){
+        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x - 1, tab->jugada[k].y, k, tab->jugada[k].ficha);
+        //   }
+        //   if(i - 1 == tab->jugada[k].x - 1 && j + 1 == tab->jugada[k].y + 1 && tab->jugada[k].ficha){
+        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x - 1, tab->jugada[k].y + 1, k, tab->jugada[k].ficha);
+        //   }
+        //   if(i == tab->jugada[k].x && j - 1 == tab->jugada[k].y - 1 && tab->jugada[k].ficha){
+        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x, tab->jugada[k].y - 1, k, tab->jugada[k].ficha);
+        //   }
+        //   if(i == tab->jugada[k].x && j + 1 == tab->jugada[k].y + 1 && tab->jugada[k].ficha){
+        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x, tab->jugada[k].y + 1, k, tab->jugada[k].ficha);
+        //   }
+        //   if(i + 1 == tab->jugada[k].x + 1 && j - 1 == tab->jugada[k].y - 1 && tab->jugada[k].ficha){
+        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x + 1, tab->jugada[k].y - 1, k, tab->jugada[k].ficha);
+        //   }
+        //   if(i + 1 == tab->jugada[k].x + 1 && j == tab->jugada[k].y && tab->jugada[k].ficha){
+        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x + 1, tab->jugada[k].y, k, tab->jugada[k].ficha);
+        //   }
+        //   if(i + 1 == tab->jugada[k].x + 1 && j + 1 == tab->jugada[k].y + 1 && tab->jugada[k].ficha){
+        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x + 1, tab->jugada[k].y + 1, k, tab->jugada[k].ficha);
+        //   }
+        //   break;
+        // }
       }
     }
   }
@@ -113,6 +120,7 @@ void movimientosPosible(jugador player[], tablero* tab, jugadaPosible jugadaPosi
   //el usuario debe ingresar estas coordenadas ( [6-4] [4-6] [5-3] [3-5] ) 
   //cualquiera coordenada fuera de estas NO es valida
   printf("\n");
+}
 }
 
 void validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
@@ -163,39 +171,40 @@ char asignarFicha(int option){
 
 //INICIAR TABLERO
 void iniciarTablero(tablero* tab){
-  tab->coordenada_id = 0;
-  tab->jugada[tab->coordenada_id].x = 4;
-  tab->jugada[tab->coordenada_id].y = 5;
-  tab->jugada[tab->coordenada_id].ficha = 'X';
-  tab->jugada[tab->coordenada_id].empty = false;
-  tab->coordenada_id++; //1
-  tab->jugada[tab->coordenada_id].x = 5;
-  tab->jugada[tab->coordenada_id].y = 4;
-  tab->jugada[tab->coordenada_id].ficha = 'X';
-  tab->jugada[tab->coordenada_id].empty = false;
-  tab->coordenada_id++; //2
-  tab->jugada[tab->coordenada_id].x = 4;
-  tab->jugada[tab->coordenada_id].y = 4;
-  tab->jugada[tab->coordenada_id].ficha = 'O';
-  tab->jugada[tab->coordenada_id].empty = false;
-  tab->coordenada_id++; //3
-  tab->jugada[tab->coordenada_id].x = 5;
-  tab->jugada[tab->coordenada_id].y = 5;
-  tab->jugada[tab->coordenada_id].ficha = 'O';
-  tab->jugada[tab->coordenada_id].empty = false;
-  tab->coordenada_id++;
-
-  for (int i = 0; i < 8; i++){
-    for(int j = 0; j < 8; j++){
-      /**Rellenar casillas vacias con "_" */
-      tab->jugada[tab->coordenada_id].x = i;
-      tab->jugada[tab->coordenada_id].y = j;
-      tab->jugada[tab->coordenada_id].ficha = '_';
-      tab->jugada[tab->coordenada_id].empty = true;
-    }
+  int id = 0;
+  // Initialize all the positions on the board
+  for (int j = 0; j < 8; j++) {
+      for (int k = 0; k < 8; k++) {
+          tab->jugada[id].x = j;
+          tab->jugada[id].y = k;
+          tab->jugada[id].ficha = '_';
+          tab->jugada[id].empty = true;
+          id++;
+      }
   }
-  
 
+  tab->coordenada_id = 0;
+  tab->jugada[27].x = 4;
+  tab->jugada[27].y = 3;
+  tab->jugada[27].ficha = 'X';
+  tab->jugada[27].empty = false;
+
+  tab->jugada[28].x = 3;
+  tab->jugada[28].y = 4;
+  tab->jugada[28].ficha = 'X';
+  tab->jugada[28].empty = false;
+
+  tab->jugada[35].x = 3;
+  tab->jugada[35].y = 3;
+  tab->jugada[35].ficha = 'O';
+  tab->jugada[35].empty = false;
+
+  tab->jugada[36].x = 4;
+  tab->jugada[36].y = 4;
+  tab->jugada[36].ficha = 'O';
+  tab->jugada[36].empty = false;
+
+  tab->coordenada_id = 4;
 }
 
 //CREAR JUGADORES
@@ -253,18 +262,10 @@ void renderTablero(tablero* tab){
         printf(" %d ", j);//numeros horizontales
       }else{
         //loop para buscar y renderizar las fichitas
-        ficha = false;
-        for (int k = 0; k < 64; k++){
-          if (i == tab->jugada[k].x && j == tab->jugada[k].y){
-            printf(" %c ", tab->jugada[k].ficha);
-            ficha = true;
-            break;//si hay ficha break
-          }
-        }
-
-        //si no hay ficha, hay espacio vacio.... y si
-        if(ficha == false){
-          printf(" _ ");
+        for (int k = 0; k < 64; k++) {
+            if (i - 1 == tab->jugada[k].x && j - 1 == tab->jugada[k].y) {
+                printf(" %c ", tab->jugada[k].ficha);
+            }
         }
       }
     }
