@@ -1,5 +1,7 @@
 #include<stdio.h>
 #include<stdbool.h>
+#include<stdlib.h>
+#include<time.h>
 
 typedef struct {
   int x;
@@ -28,8 +30,9 @@ typedef struct {
 } jugador;
 
 //MOVIMIENTOS POSIBLES
-void movimientosPosible(jugador player[], tablero* tab, jugadaPosible jugadaPosibles[]) {
-  /* si ficha igual entonces
+void movimientosPosible(jugador player[], tablero* tab) {
+  /*
+  si ficha igual entonces
   EJ: cordenada 4-4 -> buscar en las coordenadas adyacentes (8 coordenadas)
   * Horizontales: [4-3]Hl [4-5]Hr
   * Verticales: [3-4]Vt [5-4]Vb
@@ -46,10 +49,9 @@ void movimientosPosible(jugador player[], tablero* tab, jugadaPosible jugadaPosi
       // - direccion (Hor, Vert, Diag)
 
   //por ultimo pasar esto a la funcion validar jugada para que le pida al usuario alguna de las jugadas validas
-  jugadaPosible jugadasPosibles[60];
-  coordenada coordenada_a_probar[60];
-  char ficha_a_buscar = player[0].ficha;
-  char ficha_oponente = player[1].ficha;
+  coordenada jugada_posible[60];
+  char ficha_a_buscar = player[1].ficha;
+  char ficha_oponente = player[0].ficha;
   bool ficha;
   
   for(int i = 0; i < 8; i++){
@@ -57,57 +59,137 @@ void movimientosPosible(jugador player[], tablero* tab, jugadaPosible jugadaPosi
       /* buscar ficha igual a la del jugador actual */
       for (int k = 0; k < 64; k++){
         if (i == tab->jugada[k].x && j == tab->jugada[k].y && tab->jugada[k].ficha == ficha_a_buscar){
-          printf("coordenadas con X: %d - %d\n", tab->jugada[k].x + 1, tab->jugada[k].y + 1);
+          printf("coordenadas con X: %d - %d\n", tab->jugada[k].x, tab->jugada[k].y);  
           int search = 0;
           while(search < 64){
-            if(tab->jugada[search].x == tab->jugada[k].x - 1 && tab->jugada[search].y == tab->jugada[k].y - 1){
-              printf("Encontrada diagonal superior izquierda en... %d - %d | %c", tab->jugada[search].x + 1, tab->jugada[search].y + 1, tab->jugada[search].ficha);
+            if(tab->jugada[search].x == tab->jugada[k].x - 1 
+            && tab->jugada[search].y == tab->jugada[k].y - 1 
+            && tab->jugada[search].ficha == ficha_oponente){
+              printf("Encontrada diagonal superior izquierda en... %d - %d | %c\n", 
+              tab->jugada[search].x, 
+              tab->jugada[search].y, 
+              tab->jugada[search].ficha);
             }
             search++;
           }
-          // coordenada_a_probar[k].x = tab->jugada[k].x;
-          // coordenada_a_probar[k].y = tab->jugada[k].y;
-
-          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x - 1, tab->jugada[k].y - 1);
-          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x - 1, tab->jugada[k].y);
-          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x - 1, tab->jugada[k].y + 1);
-          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x, tab->jugada[k].y - 1);
-          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x, tab->jugada[k].y + 1);
-          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x + 1, tab->jugada[k].y - 1);
-          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x + 1, tab->jugada[k].y);
-          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x + 1, tab->jugada[k].y + 1);
-          // break;
-          // printf("coordenada a probar %d - %d\n", coordenada_a_probar[k].x, coordenada_a_probar[k].y);
-          // break;//si hay ficha break
-        // }else if(i == tab->jugada[k].x && j == tab->jugada[k].y && tab->jugada[k].ficha == ficha_oponente){
-        //   printf("coordenadas con O: %d - %d\n", tab->jugada[k].x, tab->jugada[k].y);
-
-        //   if(i - 1 == tab->jugada[k].x - 1 && j - 1 == tab->jugada[k].y - 1 && tab->jugada[k].ficha){
-        //     printf("coordenadas a probar ---- %d - %d --index: %d --ficha: %c\n", tab->jugada[k].x - 1, tab->jugada[k].y - 1, k, tab->jugada[k].ficha);
-        //   }
-        //   if(i - 1 == tab->jugada[k].x - 1 && j == tab->jugada[k].y && tab->jugada[k].ficha){
-        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x - 1, tab->jugada[k].y, k, tab->jugada[k].ficha);
-        //   }
-        //   if(i - 1 == tab->jugada[k].x - 1 && j + 1 == tab->jugada[k].y + 1 && tab->jugada[k].ficha){
-        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x - 1, tab->jugada[k].y + 1, k, tab->jugada[k].ficha);
-        //   }
-        //   if(i == tab->jugada[k].x && j - 1 == tab->jugada[k].y - 1 && tab->jugada[k].ficha){
-        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x, tab->jugada[k].y - 1, k, tab->jugada[k].ficha);
-        //   }
-        //   if(i == tab->jugada[k].x && j + 1 == tab->jugada[k].y + 1 && tab->jugada[k].ficha){
-        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x, tab->jugada[k].y + 1, k, tab->jugada[k].ficha);
-        //   }
-        //   if(i + 1 == tab->jugada[k].x + 1 && j - 1 == tab->jugada[k].y - 1 && tab->jugada[k].ficha){
-        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x + 1, tab->jugada[k].y - 1, k, tab->jugada[k].ficha);
-        //   }
-        //   if(i + 1 == tab->jugada[k].x + 1 && j == tab->jugada[k].y && tab->jugada[k].ficha){
-        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x + 1, tab->jugada[k].y, k, tab->jugada[k].ficha);
-        //   }
-        //   if(i + 1 == tab->jugada[k].x + 1 && j + 1 == tab->jugada[k].y + 1 && tab->jugada[k].ficha){
-        //     printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x + 1, tab->jugada[k].y + 1, k, tab->jugada[k].ficha);
-        //   }
-        //   break;
-        // }
+          search = 0;
+          while(search < 64){
+            if(tab->jugada[search].x == tab->jugada[k].x - 1
+            && tab->jugada[search].y == tab->jugada[k].y 
+            && tab->jugada[search].ficha == ficha_oponente){
+              printf("Encontrada vertical superior en... %d - %d | %c\n", 
+              tab->jugada[search].x, 
+              tab->jugada[search].y, 
+              tab->jugada[search].ficha);
+              int i = 0;
+              while(i < 64){
+                if(tab->jugada[i].x == tab->jugada[search].x - 1
+                && tab->jugada[i].y == tab->jugada[search].y){
+                  printf("Jugada posible en: %d %d | %c\n", tab->jugada[i].x, tab->jugada[i].y, tab->jugada[i].ficha);
+                }
+                i++;
+              }
+            }
+            search++;
+          }
+          search = 0;
+          while(search < 64){
+            if(tab->jugada[search].x == tab->jugada[k].x - 1 
+            && tab->jugada[search].y == tab->jugada[k].y + 1 
+            && tab->jugada[search].ficha == ficha_oponente){
+              printf("Encontrada diagonal superior derecha en... %d - %d | %c\n", 
+              tab->jugada[search].x, 
+              tab->jugada[search].y, 
+              tab->jugada[search].ficha);
+            }
+            search++;
+          }
+          search = 0;
+          while(search < 64){
+            if(tab->jugada[search].x == tab->jugada[k].x
+            && tab->jugada[search].y == tab->jugada[k].y - 1
+            && tab->jugada[search].ficha == ficha_oponente){
+              printf("Encontrada horizontal izquierda en... %d - %d | %c\n",
+              tab->jugada[search].x,
+              tab->jugada[search].y,
+              tab->jugada[search].ficha);
+              int i = 0;
+              while(i < 64){
+                if(tab->jugada[i].x == tab->jugada[search].x
+                && tab->jugada[i].y == tab->jugada[search].y - 1){
+                  printf("Jugada posible en: %d %d | %c\n", tab->jugada[i].x, tab->jugada[i].y, tab->jugada[i].ficha);
+                }
+                i++;
+              }
+            }
+            search++;
+          }
+          search = 0;
+          while(search < 64){
+            if(tab->jugada[search].x == tab->jugada[k].x 
+            && tab->jugada[search].y == tab->jugada[k].y + 1 
+            && tab->jugada[search].ficha == ficha_oponente){
+              printf("Encontrada horizontal derecha en... %d - %d | %c\n", 
+              tab->jugada[search].x, 
+              tab->jugada[search].y, 
+              tab->jugada[search].ficha);
+              int i = 0;
+              while(i < 64){
+                if(tab->jugada[i].x == tab->jugada[search].x
+                && tab->jugada[i].y == tab->jugada[search].y + 1){
+                  printf("Jugada posible en: %d %d | %c\n", tab->jugada[i].x, tab->jugada[i].y, tab->jugada[i].ficha);
+                }
+                i++;
+              }
+            }
+            search++;
+          }
+          search = 0;
+          while(search < 64){
+            if(tab->jugada[search].x == tab->jugada[k].x + 1 
+            && tab->jugada[search].y == tab->jugada[k].y - 1 
+            && tab->jugada[search].ficha == ficha_oponente){
+              printf("Encontrada diagonal inferior derecha en... %d - %d | %c\n", 
+              tab->jugada[search].x, 
+              tab->jugada[search].y, 
+              tab->jugada[search].ficha);
+            }
+            search++;
+          }
+          search = 0;
+          while(search < 64){
+            if(tab->jugada[search].x == tab->jugada[k].x + 1 
+            && tab->jugada[search].y == tab->jugada[k].y 
+            && tab->jugada[search].ficha == ficha_oponente){
+              printf("Encontrada vertical inferior en... %d - %d | %c\n", 
+              tab->jugada[search].x, 
+              tab->jugada[search].y, 
+              tab->jugada[search].ficha);
+              int i = 0;
+              while(i < 64){
+                if(tab->jugada[i].x == tab->jugada[search].x + 1
+                && tab->jugada[i].y == tab->jugada[search].y){
+                  printf("Jugada posible en: %d %d | %c\n", tab->jugada[i].x, tab->jugada[i].y, tab->jugada[i].ficha);
+                  jugadaPosible[i].x = tab->jugada[i].x;
+                  jugadaPosible[i].y = tab->jugada[i].y;
+                }
+                i++;
+              }
+            }
+            search++;
+          }
+          search = 0;
+          while(search < 64){
+            if(tab->jugada[search].x == tab->jugada[k].x + 1 
+            && tab->jugada[search].y == tab->jugada[k].y + 1 
+            && tab->jugada[search].ficha == ficha_oponente){
+              printf("Encontrada diagonal inferior derecha en... %d - %d | %c\n", 
+              tab->jugada[search].x , 
+              tab->jugada[search].y, 
+              tab->jugada[search].ficha);
+            }
+            search++;
+          }
       }
     }
   }
@@ -154,11 +236,9 @@ void ingresarJugada(jugador player[], int id, tablero* tab, jugadaPosible* play)
   // tab->casila_id++;
 }
 
-//actualmente asignar ficha ingresa una "X" si el indice del jugador es 0
-// y una "O" si el indice es 1. hay que hacerlo ALEATORIO
-void asignarFicha(jugador player[]){
+void asignarFicha(jugador player[]){//revisar que sea aleatorio realmente
   double valor = (double)rand() / (double)RAND_MAX;
-  char reultFicha = (valor >= 0.5) ? 'X' : 'O';
+  char resultFicha = (valor >= 0.5) ? 'X' : 'O';
 
   if(resultFicha == 'X'){
     player[0].ficha = 'X';
@@ -172,9 +252,9 @@ void asignarFicha(jugador player[]){
 //INICIAR TABLERO
 void iniciarTablero(tablero* tab){
   int id = 0;
-  // Initialize all the positions on the board
-  for (int j = 0; j < 8; j++) {
-      for (int k = 0; k < 8; k++) {
+  // Inciar el tablero con todas las posiciones en '_'
+  for (int j = 1; j <= 8; j++) {
+      for (int k = 1; k <= 8; k++) {
           tab->jugada[id].x = j;
           tab->jugada[id].y = k;
           tab->jugada[id].ficha = '_';
@@ -183,24 +263,25 @@ void iniciarTablero(tablero* tab){
       }
   }
 
+  //colocar fichas en la posicion inicial
   tab->coordenada_id = 0;
-  tab->jugada[27].x = 4;
-  tab->jugada[27].y = 3;
+  tab->jugada[27].x = 5;
+  tab->jugada[27].y = 4;
   tab->jugada[27].ficha = 'X';
   tab->jugada[27].empty = false;
 
-  tab->jugada[28].x = 3;
-  tab->jugada[28].y = 4;
+  tab->jugada[28].x = 4;
+  tab->jugada[28].y = 5;
   tab->jugada[28].ficha = 'X';
   tab->jugada[28].empty = false;
 
-  tab->jugada[35].x = 3;
-  tab->jugada[35].y = 3;
+  tab->jugada[35].x = 4;
+  tab->jugada[35].y = 4;
   tab->jugada[35].ficha = 'O';
   tab->jugada[35].empty = false;
 
-  tab->jugada[36].x = 4;
-  tab->jugada[36].y = 4;
+  tab->jugada[36].x = 5;
+  tab->jugada[36].y = 5;
   tab->jugada[36].ficha = 'O';
   tab->jugada[36].empty = false;
 
@@ -214,14 +295,13 @@ void crearJugador(jugador player[], int tope) {
     printf("Jugador %d\n", i + 1);
     printf("Nombre: ");
     scanf("%s", player[i].nombre);
-    player[i].ficha = asignarFicha(i);
+    asignarFicha(player);
     player[i].turno = 0;
     player[i].id = i;
     printf("\n");
   }
 }
 
-//codigo en el HP NO TE OLVIDES!!!------------------------------------------------------------------------------
 int darTurno(jugador player[]){
   int id;
   if(player[0].turno == 1 && player[1].turno == 1){//primer movimiento
@@ -263,7 +343,7 @@ void renderTablero(tablero* tab){
       }else{
         //loop para buscar y renderizar las fichitas
         for (int k = 0; k < 64; k++) {
-            if (i - 1 == tab->jugada[k].x && j - 1 == tab->jugada[k].y) {
+            if (i == tab->jugada[k].x && j == tab->jugada[k].y) {
                 printf(" %c ", tab->jugada[k].ficha);
             }
         }
@@ -306,7 +386,7 @@ int main() {
 
   int primerTurno = darTurno(jugadores);
 
-  movimientosPosible(jugadores, &tab, &play);
+  movimientosPosible(jugadores, &tab);
 
   // ingresarJugada(jugadores, 0, &tab, &play); //OJO ACA
 
