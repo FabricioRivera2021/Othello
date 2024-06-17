@@ -5,6 +5,7 @@ typedef struct {
   int x;
   int y;
   char ficha;
+  bool empty;
 } coordenada;
 
 typedef struct {
@@ -15,7 +16,7 @@ typedef struct {
 
 typedef struct {
   coordenada jugada[64];
-  int nro_turno;
+  int coordenada_id; //id de la casilla "64" casillas posibles
 } tablero;
 
 typedef struct {
@@ -28,36 +29,90 @@ typedef struct {
 
 //MOVIMIENTOS POSIBLES
 void movimientosPosible(jugador player[], tablero* tab, jugadaPosible jugadaPosibles[]) {
+  /*
+  si ficha igual entonces
+  EJ: cordenada 4-4 -> buscar en las coordenadas adyacentes (8 coordenadas)
+  * Horizontales: [4-3]Hl [4-5]Hr
+  * Verticales: [3-4]Vt [5-4]Vb
+  * Diagonales: [3-3]Dtl [3-5]Dtr [5-3]Dbl [5-5]Dbr */
+  
+  //si hay ficha del contrario, revisar siguiente ficha en esa misma direccion (Hor Vert Diag)
+  //  si sigue habiendo fichas de contrario seguir hasta que:
+  //  jugada invalida: hay una ficha del jugador actual en la siguiente casilla o el fin del tablero
+  //  jugada valida: hay un espacio vacio:
+      //-> si hay espacio vacio guardar la coordenada de ese espacio vacio, mas la direccion (Hor, Vert, Diag)
+      // y devolver al sistema la posible jugada con
+      // - coordenada de la ficha principal
+      // - coordenada del espacio vacio
+      // - direccion (Hor, Vert, Diag)
+
+  //por ultimo pasar esto a la funcion validar jugada para que le pida al usuario alguna de las jugadas validas
   jugadaPosible jugadasPosibles[60];
+  coordenada coordenada_a_probar[60];
+  char ficha_a_buscar = player[0].ficha;
+  char ficha_oponente = player[1].ficha;
+  bool ficha;
+  
   for(int i = 0; i < 8; i++){
     for(int j = 0; j < 8; j++){
-      /* buscar ficha igual a la del jugador actual
-      si ficha igual entonces
-      EJ: cordenada 4-4 -> buscar en las coordenadas adyacentes (8 coordenadas)
-      * Horizontales: [4-3]Hl [4-5]Hr
-      * Verticales: [3-4]Vt [5-4]Vb
-      * Diagonales: [3-3]Dtl [3-5]Dtr [5-3]Dbl [5-5]Dbr */
-      
-      //si hay ficha del contrario, revisar siguiente ficha en esa misma direccion (Hor Vert Diag)
-      //  si sigue habiendo fichas de contrario seguir hasta que:
-      //  jugada invalida: hay una ficha del jugador actual en la siguiente casilla o el fin del tablero
-      //  jugada valida: hay un espacio vacio:
-          //-> si hay espacio vacio guardar la coordenada de ese espacio vacio, mas la direccion (Hor, Vert, Diag)
-          // y devolver al sistema la posible jugada con
-          // - coordenada de la ficha principal
-          // - coordenada del espacio vacio
-          // - direccion (Hor, Vert, Diag)
+      /* buscar ficha igual a la del jugador actual */
+      for (int k = 0; k < 64; k++){
+        if (i == tab->jugada[k].x && j == tab->jugada[k].y && tab->jugada[k].ficha == ficha_a_buscar){
+          // coordenada_a_probar[k].x = tab->jugada[k].x;
+          // coordenada_a_probar[k].y = tab->jugada[k].y;
+          printf("coordenadas con X: %d - %d\n", tab->jugada[k].x, tab->jugada[k].y);
 
-      //por ultimo pasar esto a la funcion validar jugada para que le pida al usuario alguna de las jugadas validas
+          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x - 1, tab->jugada[k].y - 1);
+          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x - 1, tab->jugada[k].y);
+          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x - 1, tab->jugada[k].y + 1);
+          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x, tab->jugada[k].y - 1);
+          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x, tab->jugada[k].y + 1);
+          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x + 1, tab->jugada[k].y - 1);
+          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x + 1, tab->jugada[k].y);
+          // printf("coordenadas a probar %d - %d\n", tab->jugada[k].x + 1, tab->jugada[k].y + 1);
+          break;
+          // printf("coordenada a probar %d - %d\n", coordenada_a_probar[k].x, coordenada_a_probar[k].y);
+          // break;//si hay ficha break
+        }else if(i == tab->jugada[k].x && j == tab->jugada[k].y && tab->jugada[k].ficha == ficha_oponente){
+          printf("coordenadas con O: %d - %d\n", tab->jugada[k].x, tab->jugada[k].y);
+
+          if(i - 1 == tab->jugada[k].x - 1 && j - 1 == tab->jugada[k].y - 1 && tab->jugada[k].ficha){
+            printf("coordenadas a probar ---- %d - %d --index: %d --ficha: %c\n", tab->jugada[k].x - 1, tab->jugada[k].y - 1, k, tab->jugada[k].ficha);
+          }
+          if(i - 1 == tab->jugada[k].x - 1 && j == tab->jugada[k].y && tab->jugada[k].ficha){
+            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x - 1, tab->jugada[k].y, k, tab->jugada[k].ficha);
+          }
+          if(i - 1 == tab->jugada[k].x - 1 && j + 1 == tab->jugada[k].y + 1 && tab->jugada[k].ficha){
+            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x - 1, tab->jugada[k].y + 1, k, tab->jugada[k].ficha);
+          }
+          if(i == tab->jugada[k].x && j - 1 == tab->jugada[k].y - 1 && tab->jugada[k].ficha){
+            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x, tab->jugada[k].y - 1, k, tab->jugada[k].ficha);
+          }
+          if(i == tab->jugada[k].x && j + 1 == tab->jugada[k].y + 1 && tab->jugada[k].ficha){
+            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x, tab->jugada[k].y + 1, k, tab->jugada[k].ficha);
+          }
+          if(i + 1 == tab->jugada[k].x + 1 && j - 1 == tab->jugada[k].y - 1 && tab->jugada[k].ficha){
+            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x + 1, tab->jugada[k].y - 1, k, tab->jugada[k].ficha);
+          }
+          if(i + 1 == tab->jugada[k].x + 1 && j == tab->jugada[k].y && tab->jugada[k].ficha){
+            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x + 1, tab->jugada[k].y, k, tab->jugada[k].ficha);
+          }
+          if(i + 1 == tab->jugada[k].x + 1 && j + 1 == tab->jugada[k].y + 1 && tab->jugada[k].ficha){
+            printf("coordenadas a probar ---- %d - %d --index: %d  --ficha: %c\n", tab->jugada[k].x + 1, tab->jugada[k].y + 1, k, tab->jugada[k].ficha);
+          }
+          break;
+        }
+      }
     }
   }
 
-  printf("Coordenadas validas: -- -- -- -- ");
+  // printf("Coordenadas validas: -- -- -- -- ");
   //guardarlo en el array de jugadas posibles
   //EJEMPLO: para las O [4-4] las jugadas posibles son [6-4]Vb [4-6]Hr
   //EJEMPLO: para las O [5-5] las jugadas posibles son [5-3]Hl [3-5]Vt
   //el usuario debe ingresar estas coordenadas ( [6-4] [4-6] [5-3] [3-5] ) 
   //cualquiera coordenada fuera de estas NO es valida
+  printf("\n");
 }
 
 void validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
@@ -85,10 +140,11 @@ void ingresarJugada(jugador player[], int id, tablero* tab, jugadaPosible* play)
   int x_fin = play->coord_fin.x;
   int y_fin = play->coord_fin.y;
 
-  tab->jugada[tab->nro_turno].x = x_inicio;
-  tab->jugada[tab->nro_turno].y = y_inicio;
-  tab->jugada[tab->nro_turno].ficha = ficha;
-  tab->nro_turno++;
+  //revisar-------------------------------------------------------°!!!!!!!!
+  // tab->jugada[tab->casila_id].x = x_inicio;
+  // tab->jugada[tab->casila_id].y = y_inicio;
+  // tab->jugada[tab->casila_id].ficha = ficha;
+  // tab->casila_id++;
 }
 
 //actualmente asignar ficha ingresa una "X" si el indice del jugador es 0
@@ -107,23 +163,38 @@ char asignarFicha(int option){
 
 //INICIAR TABLERO
 void iniciarTablero(tablero* tab){
-  tab->nro_turno = 0;
-  tab->jugada[tab->nro_turno].x = 4;
-  tab->jugada[tab->nro_turno].y = 5;
-  tab->jugada[tab->nro_turno].ficha = 'X';
-  tab->nro_turno++; //1
-  tab->jugada[tab->nro_turno].x = 5;
-  tab->jugada[tab->nro_turno].y = 4;
-  tab->jugada[tab->nro_turno].ficha = 'X';
-  tab->nro_turno++; //2
-  tab->jugada[tab->nro_turno].x = 4;
-  tab->jugada[tab->nro_turno].y = 4;
-  tab->jugada[tab->nro_turno].ficha = 'O';
-  tab->nro_turno++; //3
-  tab->jugada[tab->nro_turno].x = 5;
-  tab->jugada[tab->nro_turno].y = 5;
-  tab->jugada[tab->nro_turno].ficha = 'O';
-  tab->nro_turno++;
+  tab->coordenada_id = 0;
+  tab->jugada[tab->coordenada_id].x = 4;
+  tab->jugada[tab->coordenada_id].y = 5;
+  tab->jugada[tab->coordenada_id].ficha = 'X';
+  tab->jugada[tab->coordenada_id].empty = false;
+  tab->coordenada_id++; //1
+  tab->jugada[tab->coordenada_id].x = 5;
+  tab->jugada[tab->coordenada_id].y = 4;
+  tab->jugada[tab->coordenada_id].ficha = 'X';
+  tab->jugada[tab->coordenada_id].empty = false;
+  tab->coordenada_id++; //2
+  tab->jugada[tab->coordenada_id].x = 4;
+  tab->jugada[tab->coordenada_id].y = 4;
+  tab->jugada[tab->coordenada_id].ficha = 'O';
+  tab->jugada[tab->coordenada_id].empty = false;
+  tab->coordenada_id++; //3
+  tab->jugada[tab->coordenada_id].x = 5;
+  tab->jugada[tab->coordenada_id].y = 5;
+  tab->jugada[tab->coordenada_id].ficha = 'O';
+  tab->jugada[tab->coordenada_id].empty = false;
+  tab->coordenada_id++;
+
+  for (int i = 0; i < 8; i++){
+    for(int j = 0; j < 8; j++){
+      /**Rellenar casillas vacias con "_" */
+      tab->jugada[tab->coordenada_id].x = i;
+      tab->jugada[tab->coordenada_id].y = j;
+      tab->jugada[tab->coordenada_id].ficha = '_';
+      tab->jugada[tab->coordenada_id].empty = true;
+    }
+  }
+  
 
 }
 
@@ -234,7 +305,9 @@ int main() {
 
   int primerTurno = darTurno(jugadores);
 
-  ingresarJugada(jugadores, 0, &tab, &play); //OJO ACA
+  movimientosPosible(jugadores, &tab, &play);
+
+  // ingresarJugada(jugadores, 0, &tab, &play); //OJO ACA
 
   renderTablero(&tab);
 
