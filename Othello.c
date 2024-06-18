@@ -31,104 +31,223 @@ typedef struct {
 
 //FIND conrdenada after first coordenada
 // direccion: 1DIAG-SUP-IZQ 2ARRIBA 3DIAG-SUP-DER 4H-IZQ 5H-DER 6DIAG-INF-IZQ 7-ABAJO 8V-INF-DER
-int find(tablero* tab, int x, int y, int offset, int direccion, char ficha){
+void find(tablero* tab, int x, int y, int offset, int direccion, char ficha, char ficha_oponente){
   int l = 0;
   if(direccion == 4){
     while(l < 64){
         if(tab->jugada[l].x == x && tab->jugada[l].y == y - offset){
-          if(y - offset <= 0){
-            printf("fuera de tablero");
-            return 0;
+          if(y - offset == 1){
+            printf("fuera de tablero \n");
+            break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
-            printf("ficha del jugador actual");
-            return 0;
+            printf("ficha del jugador actual \n");
+            break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
-            printf("Espacio vacio en:%d %d | %c\n",
+            printf("Espacio vacio en: %d %d | %c\n",
               tab->jugada[l].x,
               tab->jugada[l].y,
               tab->jugada[l].ficha
             );
-            return 1;
+            break; //jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha_oponente){
+            printf("Ficha oponente encontrada en %d %d, seguir buscando:\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 1; //seguir buscando
           }
         }
     l++;
   }
   }else if(direccion == 7){
     while(l < 64){
-      if(tab->jugada[l].x == x + offset && tab->jugada[l].y == y){
-          printf("--------  %d %d | %c\n",
-            tab->jugada[l].x,
-            tab->jugada[l].y,
-            tab->jugada[l].ficha
-          );  
-      }
+        if(tab->jugada[l].x == x + offset && tab->jugada[l].y == y){
+          if(x + offset == 8){
+            printf("fuera de tablero \n");
+            return 2; //fuera de tablero. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha){
+            printf("ficha del jugador actual \n");
+            return 2; //ficha igual al del jugador. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == '_'){
+            printf("Espacio vacio en: %d %d | %c\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 2; //jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha_oponente){
+            printf("Ficha oponente encontrada en %d %d, seguir buscando:\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 1; //seguir buscando
+          }
+        }
     l++;
   }
   }else if (direccion == 1){
     while(l < 64){
-      if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y - offset){
-          printf("--------  %d %d | %c\n",
-            tab->jugada[l].x,
-            tab->jugada[l].y,
-            tab->jugada[l].ficha
-          );  
-      }
-      l++;
+        if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y - offset){
+          if(y - offset == 1 || x - offset == 1){
+            printf("fuera de tablero \n");
+            return 2; //fuera de tablero. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha){
+            printf("ficha del jugador actual \n");
+            return 2; //ficha igual al del jugador. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == '_'){
+            printf("Espacio vacio en: %d %d | %c\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 2; //jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha_oponente){
+            printf("Ficha oponente encontrada en %d %d, seguir buscando:\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 1; //seguir buscando
+          }
+        }
+    l++;
     }
   }else if (direccion == 2){
     while(l < 64){
-      if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y ){
-          printf("--------  %d %d | %c\n",
-            tab->jugada[l].x,
-            tab->jugada[l].y,
-            tab->jugada[l].ficha
-          );  
-      }
-      l++;
+        if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y){
+          if(x - offset == 1){
+            printf("fuera de tablero \n");
+            return 2; //fuera de tablero. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha){
+            printf("ficha del jugador actual \n");
+            return 2; //ficha igual al del jugador. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == '_'){
+            printf("Espacio vacio en: %d %d | %c\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 2; //jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha_oponente){
+            printf("Ficha oponente encontrada en %d %d, seguir buscando:\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 1; //seguir buscando
+          }
+        }
+    l++;
     }
   }else if (direccion == 3){
     while(l < 64){
-      if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y + offset ){
-          printf("--------  %d %d | %c\n",
-            tab->jugada[l].x,
-            tab->jugada[l].y,
-            tab->jugada[l].ficha
-          );  
-      }
-      l++;
+        if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y + offset){
+          if(x - offset == 1 || y + offset == 8){
+            printf("fuera de tablero \n");
+            return 2; //fuera de tablero. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha){
+            printf("ficha del jugador actual \n");
+            return 2; //ficha igual al del jugador. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == '_'){
+            printf("Espacio vacio en: %d %d | %c\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 2; //jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha_oponente){
+            printf("Ficha oponente encontrada en %d %d, seguir buscando:\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 1; //seguir buscando
+          }
+        }
+    l++;
     }
   }else if (direccion == 5){
     while(l < 64){
-      if(tab->jugada[l].x == x && tab->jugada[l].y == y + offset ){
-          printf("--------  %d %d | %c\n",
-            tab->jugada[l].x,
-            tab->jugada[l].y,
-            tab->jugada[l].ficha
-          );  
-      }
-      l++;
+        if(tab->jugada[l].x == x && tab->jugada[l].y == y + offset){
+          if(y + offset == 8){
+            printf("fuera de tablero \n");
+            return 2; //fuera de tablero. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha){
+            printf("ficha del jugador actual \n");
+            return 2; //ficha igual al del jugador. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == '_'){
+            printf("Espacio vacio en: %d %d | %c\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 2; //jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha_oponente){
+            printf("Ficha oponente encontrada en %d %d, seguir buscando:\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 1; //seguir buscando
+          }
+        }
+    l++;
     }
   }else if (direccion == 6){
     while(l < 64){
-      if(tab->jugada[l].x == x + offset && tab->jugada[l].y == y - offset ){
-          printf("--------  %d %d | %c\n",
-            tab->jugada[l].x,
-            tab->jugada[l].y,
-            tab->jugada[l].ficha
-          );  
-      }
-      l++;
+        if(tab->jugada[l].x == x + offset && tab->jugada[l].y == y - offset){
+          if(x + offset == 8 || y - offset == 1){
+            printf("fuera de tablero \n");
+            return 2; //fuera de tablero. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha){
+            printf("ficha del jugador actual \n");
+            return 2; //ficha igual al del jugador. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == '_'){
+            printf("Espacio vacio en: %d %d | %c\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 2; //jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha_oponente){
+            printf("Ficha oponente encontrada en %d %d, seguir buscando:\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 1; //seguir buscando
+          }
+        }
+    l++;
     }
   }else if (direccion == 8){
     while(l < 64){
-      if(tab->jugada[l].x == x + offset && tab->jugada[l].y == y + offset ){
-          printf("--------  %d %d | %c\n",
-            tab->jugada[l].x,
-            tab->jugada[l].y,
-            tab->jugada[l].ficha
-          );  
-      }
-      l++;
+        if(tab->jugada[l].x == x + offset && tab->jugada[l].y == y + offset){
+          if(x + offset == 8 || y + offset == 8){
+            printf("fuera de tablero \n");
+            return 2; //fuera de tablero. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha){
+            printf("ficha del jugador actual \n");
+            return 2; //ficha igual al del jugador. no hay jugada PARAR
+          }else if(tab->jugada[l].ficha == '_'){
+            printf("Espacio vacio en: %d %d | %c\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 2; //jugada PARAR
+          }else if(tab->jugada[l].ficha == ficha_oponente){
+            printf("Ficha oponente encontrada en %d %d, seguir buscando:\n",
+              tab->jugada[l].x,
+              tab->jugada[l].y,
+              tab->jugada[l].ficha
+            );
+            return 1; //seguir buscando
+          }
+        }
+    l++;
     }
   }
   
@@ -137,6 +256,7 @@ int find(tablero* tab, int x, int y, int offset, int direccion, char ficha){
 //ECONTRAR COORDENADA
 coordenada findCoordenada(jugador player[], tablero* tab, int x, int y){
   coordenada result;
+  char ficha_oponente;
   int i = 0;
   int j = 0;
   while(i < 64){
@@ -149,96 +269,138 @@ coordenada findCoordenada(jugador player[], tablero* tab, int x, int y){
     }
     i++;
   }
+  if(result.ficha == 'X'){
+    ficha_oponente = 'O';
+  }else if(result.ficha == 'O'){
+    ficha_oponente = 'X';
+  }
 
   while(j < 64){
     //diagonal
-    if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == 'O'){
+    if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == ficha_oponente){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
         tab->jugada[j].y,
         tab->jugada[j].ficha
       );
+
+      //int find(tablero* tab, int x, int y, int offset, int direccion, char ficha)
+      int offset = 1;
+      while(find(tab, result.x, result.y, offset, 4, player[0].ficha, ficha_oponente) == 1){
+        offset++;
+      }
     }
     //arriba
-    if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y && tab->jugada[j].ficha == 'O'){
+    if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y && tab->jugada[j].ficha == ficha_oponente){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
         tab->jugada[j].y,
         tab->jugada[j].ficha
       );
+
+      //int find(tablero* tab, int x, int y, int offset, int direccion, char ficha)
+      int offset = 1;
+      while(find(tab, result.x, result.y, offset, 2, player[0].ficha, ficha_oponente) == 1){
+        offset++;
+      }
     }
     //diagonal
-    if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y + 1 && tab->jugada[j].ficha == 'O'){
+    if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y + 1 && tab->jugada[j].ficha == ficha_oponente){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
         tab->jugada[j].y,
         tab->jugada[j].ficha
       );
+
+      //int find(tablero* tab, int x, int y, int offset, int direccion, char ficha)
+      int offset = 1;
+      while(find(tab, result.x, result.y, offset, 3, player[0].ficha, ficha_oponente) == 1){
+        offset++;
+      }
     }
     //derecha
-    if (tab->jugada[j].x == result.x && tab->jugada[j].y == result.y + 1 && tab->jugada[j].ficha == 'O'){
+    if (tab->jugada[j].x == result.x && tab->jugada[j].y == result.y + 1 && tab->jugada[j].ficha == ficha_oponente){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
         tab->jugada[j].y,
         tab->jugada[j].ficha
       );
+
+      //int find(tablero* tab, int x, int y, int offset, int direccion, char ficha)
+      int offset = 1;
+      while(find(tab, result.x, result.y, offset, 5, player[0].ficha, ficha_oponente) == 1){
+        offset++;
+      }
     }
     //izquierda
-    if (tab->jugada[j].x == result.x && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == 'O'){
+    if (tab->jugada[j].x == result.x && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == ficha_oponente){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
         tab->jugada[j].y,
         tab->jugada[j].ficha
       );
       
-      // int find(tablero* tab, int x, int y, int offset, int direccion, char ficha)
-      // int offset = 1;
-      // while(find(tab, result.x, result.y, offset, 4, player[0].ficha) == 0){
-      //   offset++;
-      // }
-
-      find(tab, result.x, result.y, 1, 4, player[0].ficha);
+      //int find(tablero* tab, int x, int y, int offset, int direccion, char ficha)
+      int offset = 1;
+      while(find(tab, result.x, result.y, offset, 4, player[0].ficha, ficha_oponente) == 1){
+        offset++;
+      }
     }
     //diagonal
-    if (tab->jugada[j].x == result.x + 1 && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == 'O'){
+    if (tab->jugada[j].x == result.x + 1 && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == ficha_oponente){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
         tab->jugada[j].y,
         tab->jugada[j].ficha
       );
 
-      // void find(tablero* tab, int x, int y, int offset)
-      find(tab, result.x, result.y, 2, 6, player[0].ficha);
-      find(tab, result.x, result.y, 3, 6, player[0].ficha);
+      //int find(tablero* tab, int x, int y, int offset, int direccion, char ficha)
+      int offset = 1;
+      while(find(tab, result.x, result.y, offset, 6, player[0].ficha, ficha_oponente) == 1){
+        offset++;
+      }
     }
     //abajo
-    if (tab->jugada[j].x == result.x + 1 && tab->jugada[j].y == result.y && tab->jugada[j].ficha == 'O'){
+    if (tab->jugada[j].x == result.x + 1 && tab->jugada[j].y == result.y && tab->jugada[j].ficha == ficha_oponente){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
         tab->jugada[j].y,
         tab->jugada[j].ficha
       );
             
-      // void find(tablero* tab, int x, int y, int offset, direccion)
-      find(tab, result.x, result.y, 2, 7, player[0].ficha);
-      find(tab, result.x, result.y, 3, 7, player[0].ficha);
-      find(tab, result.x, result.y, 4, 7, player[0].ficha);
+      //int find(tablero* tab, int x, int y, int offset, int direccion, char ficha)
+      int offset = 1;
+      while(find(tab, result.x, result.y, offset, 7, player[0].ficha, ficha_oponente) == 1){
+        offset++;
+      }
     }
     //diagonal
-    if (tab->jugada[j].x == result.x + 1 && tab->jugada[j].y == result.y + 1 && tab->jugada[j].ficha == 'O'){
+    if (tab->jugada[j].x == result.x + 1 && tab->jugada[j].y == result.y + 1 && tab->jugada[j].ficha == ficha_oponente){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
         tab->jugada[j].y,
         tab->jugada[j].ficha
       );
+
+      //int find(tablero* tab, int x, int y, int offset, int direccion, char ficha)
+      int offset = 1;
+      while(find(tab, result.x, result.y, offset, 8, player[0].ficha, ficha_oponente) == 1){
+        offset++;
+      }
     }
     j++;
   }
 
   /*
   // direccion: 
-    1DIAG-SUP-IZQ 2ARRIBA 3DIAG-SUP-DER 4H-IZQ 5H-DER 6DIAG-INF-IZQ 7-ABAJO 8V-INF-DER
-    [-1 -1 ]      [-1 0]  [-1 +1]       [0 -1] [0 +1] [+1 -1]       [+1 0]  [+1 +1]
+    1DIAG-SUP-IZQ | 2ARRIBA  | 3DIAG-SUP-DER 
+    [-1 -1 ]      | [-1 0]   | [-1 +1]
+    --------------|----------|--------------
+    4H-IZQ        |          | 5H-DER
+    [0 -1]        |   [*]    | [0 +1]
+    --------------|----------|-------------
+    6DIAG-INF-IZQ | 7-ABAJO  | 8V-INF-DER
+    [+1 -1]       | [+1 0]   | [+1 +1]
   */
   return result;
 }
@@ -479,6 +641,22 @@ void iniciarTablero(tablero* tab){
 
   //colocar fichas en la posicion inicial
   tab->coordenada_id = 0;
+  tab->jugada[24].x = 4;
+  tab->jugada[24].y = 1;
+  tab->jugada[24].ficha = 'O';
+  tab->jugada[24].empty = false;
+
+  tab->jugada[25].x = 4;
+  tab->jugada[25].y = 2;
+  tab->jugada[25].ficha = 'O';
+  tab->jugada[25].empty = false;
+  
+  tab->coordenada_id = 0;
+  tab->jugada[26].x = 4;
+  tab->jugada[26].y = 3;
+  tab->jugada[26].ficha = 'O';
+  tab->jugada[26].empty = false;
+
   tab->jugada[27].x = 5;
   tab->jugada[27].y = 4;
   tab->jugada[27].ficha = 'X';
@@ -499,7 +677,7 @@ void iniciarTablero(tablero* tab){
   tab->jugada[36].ficha = 'O';
   tab->jugada[36].empty = false;
 
-  tab->coordenada_id = 4;
+  tab->coordenada_id = 5;
 }
 
 //CREAR JUGADORES
@@ -603,7 +781,7 @@ int main() {
 
   int primerTurno = darTurno(jugadores);
 
-  test = findCoordenada(jugadores ,&tab, 4, 5);
+  test = findCoordenada(jugadores, &tab, 5, 5);
   printf("\n-------\n%d %d | %c\n------\n\n",
     test.x,
     test.y,
