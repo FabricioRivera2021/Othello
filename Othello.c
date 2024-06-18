@@ -29,7 +29,6 @@ typedef struct {
   bool ultimoTurno; //para saber quien tuvo el ultimo turno
 } jugador;
 
-<<<<<<< HEAD
 //FIND conrdenada after first coordenada
 // direccion: 1DIAG-SUP-IZQ 2ARRIBA 3DIAG-SUP-DER 4H-IZQ 5H-DER 6DIAG-INF-IZQ 7-ABAJO 8V-INF-DER
 int find(tablero* tab, int x, int y, int offset, int direccion, char ficha){
@@ -137,10 +136,6 @@ int find(tablero* tab, int x, int y, int offset, int direccion, char ficha){
 
 //ECONTRAR COORDENADA
 coordenada findCoordenada(jugador player[], tablero* tab, int x, int y){
-=======
-//ECONTRAR COORDENADA
-coordenada findCoordenada(tablero* tab, int x, int y){
->>>>>>> bee2e9889197543172821e74af27c2dbec368e7d
   coordenada result;
   int i = 0;
   int j = 0;
@@ -156,10 +151,7 @@ coordenada findCoordenada(tablero* tab, int x, int y){
   }
 
   while(j < 64){
-<<<<<<< HEAD
     //diagonal
-=======
->>>>>>> bee2e9889197543172821e74af27c2dbec368e7d
     if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == 'O'){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
@@ -167,10 +159,7 @@ coordenada findCoordenada(tablero* tab, int x, int y){
         tab->jugada[j].ficha
       );
     }
-<<<<<<< HEAD
     //arriba
-=======
->>>>>>> bee2e9889197543172821e74af27c2dbec368e7d
     if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y && tab->jugada[j].ficha == 'O'){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
@@ -178,10 +167,7 @@ coordenada findCoordenada(tablero* tab, int x, int y){
         tab->jugada[j].ficha
       );
     }
-<<<<<<< HEAD
     //diagonal
-=======
->>>>>>> bee2e9889197543172821e74af27c2dbec368e7d
     if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y + 1 && tab->jugada[j].ficha == 'O'){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
@@ -189,10 +175,7 @@ coordenada findCoordenada(tablero* tab, int x, int y){
         tab->jugada[j].ficha
       );
     }
-<<<<<<< HEAD
     //derecha
-=======
->>>>>>> bee2e9889197543172821e74af27c2dbec368e7d
     if (tab->jugada[j].x == result.x && tab->jugada[j].y == result.y + 1 && tab->jugada[j].ficha == 'O'){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
@@ -200,17 +183,13 @@ coordenada findCoordenada(tablero* tab, int x, int y){
         tab->jugada[j].ficha
       );
     }
-<<<<<<< HEAD
     //izquierda
-=======
->>>>>>> bee2e9889197543172821e74af27c2dbec368e7d
     if (tab->jugada[j].x == result.x && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == 'O'){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
         tab->jugada[j].y,
         tab->jugada[j].ficha
       );
-<<<<<<< HEAD
       
       // int find(tablero* tab, int x, int y, int offset, int direccion, char ficha)
       // int offset = 1;
@@ -221,32 +200,24 @@ coordenada findCoordenada(tablero* tab, int x, int y){
       find(tab, result.x, result.y, 1, 4, player[0].ficha);
     }
     //diagonal
-=======
-    }
->>>>>>> bee2e9889197543172821e74af27c2dbec368e7d
     if (tab->jugada[j].x == result.x + 1 && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == 'O'){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
         tab->jugada[j].y,
         tab->jugada[j].ficha
       );
-<<<<<<< HEAD
 
       // void find(tablero* tab, int x, int y, int offset)
       find(tab, result.x, result.y, 2, 6, player[0].ficha);
       find(tab, result.x, result.y, 3, 6, player[0].ficha);
     }
     //abajo
-=======
-    }
->>>>>>> bee2e9889197543172821e74af27c2dbec368e7d
     if (tab->jugada[j].x == result.x + 1 && tab->jugada[j].y == result.y && tab->jugada[j].ficha == 'O'){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
         tab->jugada[j].y,
         tab->jugada[j].ficha
       );
-<<<<<<< HEAD
             
       // void find(tablero* tab, int x, int y, int offset, direccion)
       find(tab, result.x, result.y, 2, 7, player[0].ficha);
@@ -254,9 +225,6 @@ coordenada findCoordenada(tablero* tab, int x, int y){
       find(tab, result.x, result.y, 4, 7, player[0].ficha);
     }
     //diagonal
-=======
-    }
->>>>>>> bee2e9889197543172821e74af27c2dbec368e7d
     if (tab->jugada[j].x == result.x + 1 && tab->jugada[j].y == result.y + 1 && tab->jugada[j].ficha == 'O'){
       printf("%d %d | %c\n",
         tab->jugada[j].x,
@@ -268,22 +236,9 @@ coordenada findCoordenada(tablero* tab, int x, int y){
   }
 
   /*
-<<<<<<< HEAD
   // direccion: 
     1DIAG-SUP-IZQ 2ARRIBA 3DIAG-SUP-DER 4H-IZQ 5H-DER 6DIAG-INF-IZQ 7-ABAJO 8V-INF-DER
     [-1 -1 ]      [-1 0]  [-1 +1]       [0 -1] [0 +1] [+1 -1]       [+1 0]  [+1 +1]
-=======
-    -1 -1
-    -1 0
-    -1 +1
-
-    0 -1
-    0 +1
-
-    +1 -1
-    +1 0
-    +1 +1
->>>>>>> bee2e9889197543172821e74af27c2dbec368e7d
   */
   return result;
 }
@@ -648,11 +603,7 @@ int main() {
 
   int primerTurno = darTurno(jugadores);
 
-<<<<<<< HEAD
   test = findCoordenada(jugadores ,&tab, 4, 5);
-=======
-  test = findCoordenada(&tab, 4, 5);
->>>>>>> bee2e9889197543172821e74af27c2dbec368e7d
   printf("\n-------\n%d %d | %c\n------\n\n",
     test.x,
     test.y,
