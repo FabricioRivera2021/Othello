@@ -55,7 +55,7 @@ void showPlays (jugadaPosible plays[]){
   }
 }
 
-//FIND conrdenada after first coordenada
+//LUEGO DE ENCONTRAR CASILLAS ADYACENTES SEGUIR BUSCANDO EN LA DIRECCION QUE CORRESPONDA
 void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_oponente, jugadaPosible plays[]){
   int offset = 1;
   int l = 0;
@@ -270,7 +270,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
   }
 }
 
-//ECONTRAR JUGADAS POSIBLES
+//ECONTRAR CASILLAS ADYACENTES
 jugadaPosible* findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosible plays[]){
   coordenada result;
   char ficha_oponente;
