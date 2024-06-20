@@ -12,8 +12,8 @@ typedef struct {
 } coordenada;
 
 typedef struct {
-  coordenada coord_inicio;
-  coordenada coord_fin;
+  coordenada coord_inicio[3];
+  coordenada coord_fin[3];//a lo sumo 3 coordenadas al mismo tiempo
   char direccion[20];
   bool isPlay;
 } jugadaPosible;
@@ -33,10 +33,18 @@ typedef struct {
 
 void iniciarPlays (jugadaPosible plays[]){
   for(int i = 0; i < 64; i++){
-      plays[i].coord_inicio.x = 0;
-      plays[i].coord_inicio.y = 0;
-      plays[i].coord_fin.x = 0;
-      plays[i].coord_fin.y = 0;
+      plays[i].coord_inicio[0].x = 0;
+      plays[i].coord_inicio[0].y = 0;
+      plays[i].coord_inicio[1].x = 0;
+      plays[i].coord_inicio[1].y = 0;
+      plays[i].coord_inicio[2].x = 0;
+      plays[i].coord_inicio[2].y = 0;
+      plays[i].coord_fin[0].x = 0;
+      plays[i].coord_fin[0].y = 0;
+      plays[i].coord_fin[1].x = 0;
+      plays[i].coord_fin[1].y = 0;
+      plays[i].coord_fin[2].x = 0;
+      plays[i].coord_fin[2].y = 0;
       plays[i].isPlay = false;
   }
 }
@@ -44,19 +52,46 @@ void iniciarPlays (jugadaPosible plays[]){
 void showPlays (jugadaPosible plays[]){
   for(int i = 0; i < 64; i++){
     if(plays[i].isPlay == 1){
-      printf("jugada valida en: [%d - %d] [%d - %d] direccion: %s\n", 
-        plays[i].coord_inicio.x,
-        plays[i].coord_inicio.y,
-        plays[i].coord_fin.x,
-        plays[i].coord_fin.y,
-        plays[i].direccion
+      printf("%d -> jugada valida en: [%d - %d] [%d - %d] [%d - %d] => 1|%d - %d| 2|%d - %d| 3|%d - %d| direccion: %s Es jugada: %d\n", 
+        i,
+        plays[i].coord_inicio[0].x,
+        plays[i].coord_inicio[0].y,
+        plays[i].coord_inicio[1].x,
+        plays[i].coord_inicio[1].y,
+        plays[i].coord_inicio[2].x,
+        plays[i].coord_inicio[2].y,
+        plays[i].coord_fin[0].x,
+        plays[i].coord_fin[0].y,
+        plays[i].coord_fin[1].x,
+        plays[i].coord_fin[1].y,
+        plays[i].coord_fin[2].x,
+        plays[i].coord_fin[2].y,
+        plays[i].direccion,
+        plays[i].isPlay
       );
     }
   }
 }
 
+void savePlays(jugadaPosible plays[], int index, int x, int y, int fin_x, int fin_y, char direccion[], int repetido){
+  if(plays[index].coord_fin[repetido].x != 0 && plays[index].coord_fin[repetido].y != 0){
+    plays[index].coord_inicio[repetido + 1].x = x;
+    plays[index].coord_inicio[repetido + 1].y = y;
+    plays[index].coord_fin[repetido + 1].x = fin_x;
+    plays[index].coord_fin[repetido + 1].y = fin_y;
+    plays[index].isPlay = true;
+    strcpy(plays[index].direccion, direccion);
+  }
+  plays[index].coord_inicio[repetido].x = x;
+  plays[index].coord_inicio[repetido].y = y;
+  plays[index].coord_fin[repetido].x = fin_x;
+  plays[index].coord_fin[repetido].y = fin_y;
+  plays[index].isPlay = true;
+  strcpy(plays[index].direccion, direccion);
+}
+
 //LUEGO DE ENCONTRAR CASILLAS ADYACENTES SEGUIR BUSCANDO EN LA DIRECCION QUE CORRESPONDA
-void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_oponente, jugadaPosible plays[]){
+void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_oponente, jugadaPosible plays[], int repetido){
   int offset = 1;
   int l = 0;
   if(direccion == 4){
@@ -69,13 +104,8 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
             printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
-            //guardar la play en algun lugar del array de 64 elemntos y usar isPlay para encontrarlas
-            plays[l].coord_inicio.x = x;
-            plays[l].coord_inicio.y = y;
-            plays[l].coord_fin.x = tab->jugada[l].x;
-            plays[l].coord_fin.y = tab->jugada[l].y;
-            plays[l].isPlay = true;
-            strcpy(plays[l].direccion, "horizontal-");
+            //guardar la play
+            savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "horizontal-", repetido);
             break;
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
@@ -95,13 +125,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
             printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
-            //guardar la play en algun lugar del array de 64 elemntos y usar isPlay para encontrarlas
-            plays[l].coord_inicio.x = x;
-            plays[l].coord_inicio.y = y;
-            plays[l].coord_fin.x = tab->jugada[l].x;
-            plays[l].coord_fin.y = tab->jugada[l].y;
-            plays[l].isPlay = true;
-            strcpy(plays[l].direccion, "vertical-");
+            savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "vertical-", repetido);
             break;
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
@@ -121,13 +145,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
             printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
-            //guardar la play en algun lugar del array de 64 elemntos y usar isPlay para encontrarlas
-            plays[l].coord_inicio.x = x;
-            plays[l].coord_inicio.y = y;
-            plays[l].coord_fin.x = tab->jugada[l].x;
-            plays[l].coord_fin.y = tab->jugada[l].y;
-            plays[l].isPlay = true;
-            strcpy(plays[l].direccion, "diag_sup_izq");
+            savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "diag_sup_izq", repetido);
             break;
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
@@ -147,13 +165,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
             printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
-            //guardar la play en algun lugar del array de 64 elemntos y usar isPlay para encontrarlas
-            plays[l].coord_inicio.x = x;
-            plays[l].coord_inicio.y = y;
-            plays[l].coord_fin.x = tab->jugada[l].x;
-            plays[l].coord_fin.y = tab->jugada[l].y;
-            plays[l].isPlay = true;
-            strcpy(plays[l].direccion, "vertical+");
+            savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "vertical+", repetido);
             break;
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
@@ -173,13 +185,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
             printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
-            //guardar la play en algun lugar del array de 64 elemntos y usar isPlay para encontrarlas
-            plays[l].coord_inicio.x = x;
-            plays[l].coord_inicio.y = y;
-            plays[l].coord_fin.x = tab->jugada[l].x;
-            plays[l].coord_fin.y = tab->jugada[l].y;
-            plays[l].isPlay = true;
-            strcpy(plays[l].direccion, "diag_sup_der");
+            savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "diag_sup_der", repetido);
             break;
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
@@ -199,13 +205,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
             printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
-            //guardar la play en algun lugar del array de 64 elemntos y usar isPlay para encontrarlas
-            plays[l].coord_inicio.x = x;
-            plays[l].coord_inicio.y = y;
-            plays[l].coord_fin.x = tab->jugada[l].x;
-            plays[l].coord_fin.y = tab->jugada[l].y;
-            plays[l].isPlay = true;
-            strcpy(plays[l].direccion, "horizontal+");
+            savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "horizontal+", repetido);
             break;
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
@@ -225,13 +225,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
             printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
-            //guardar la play en algun lugar del array de 64 elemntos y usar isPlay para encontrarlas
-            plays[l].coord_inicio.x = x;
-            plays[l].coord_inicio.y = y;
-            plays[l].coord_fin.x = tab->jugada[l].x;
-            plays[l].coord_fin.y = tab->jugada[l].y;
-            plays[l].isPlay = true;
-            strcpy(plays[l].direccion, "diag_inf_izq");
+            savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "diag_inf_izq", repetido);
             break;
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
@@ -251,13 +245,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
             printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
-            //guardar la play en algun lugar del array de 64 elemntos y usar isPlay para encontrarlas
-            plays[l].coord_inicio.x = x;
-            plays[l].coord_inicio.y = y;
-            plays[l].coord_fin.x = tab->jugada[l].x;
-            plays[l].coord_fin.y = tab->jugada[l].y;
-            plays[l].isPlay = true;
-            strcpy(plays[l].direccion, "diag_inf_der");
+            savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "diag_inf_der", repetido);
             break;
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
@@ -271,7 +259,8 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
 }
 
 //ECONTRAR CASILLAS ADYACENTES
-jugadaPosible* findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosible plays[]){
+void findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosible plays[]){
+  int repetido = 0;
   coordenada result;
   char ficha_oponente;
   int i = 0;
@@ -295,43 +284,51 @@ jugadaPosible* findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosib
   while(j < 64){
     //diagonal sup izq
     if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == ficha_oponente){
-
-      find(tab, result.x, result.y, 1, player->ficha, ficha_oponente, plays);
+      printf("1 - [%d - %d] | ORIGEN: %d |\n", tab->jugada[j].x, tab->jugada[j].y, j);
+      find(tab, result.x, result.y, 1, player->ficha, ficha_oponente, plays, repetido);
+      // repetido++;
     }
     //arriba
     if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y && tab->jugada[j].ficha == ficha_oponente){
-
-      find(tab, result.x, result.y, 2, player->ficha, ficha_oponente, plays);
+      printf("2 - [%d - %d] | ORIGEN: %d |\n", tab->jugada[j].x, tab->jugada[j].y, j);
+      find(tab, result.x, result.y, 2, player->ficha, ficha_oponente, plays, repetido);
+      // repetido++;
     }
     //diagonal sup der
     if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y + 1 && tab->jugada[j].ficha == ficha_oponente){
-
-      find(tab, result.x, result.y, 3, player->ficha, ficha_oponente, plays);
+      printf("3 - [%d - %d] | ORIGEN: %d |\n", tab->jugada[j].x, tab->jugada[j].y, j);
+      find(tab, result.x, result.y, 3, player->ficha, ficha_oponente, plays, repetido);
+      // repetido++;
     }
     //derecha 
     if (tab->jugada[j].x == result.x && tab->jugada[j].y == result.y + 1 && tab->jugada[j].ficha == ficha_oponente){
-
-      find(tab, result.x, result.y, 5, player->ficha, ficha_oponente, plays);
+      printf("4 - [%d - %d] | ORIGEN: %d |\n", tab->jugada[j].x, tab->jugada[j].y, j);
+      find(tab, result.x, result.y, 5, player->ficha, ficha_oponente, plays, repetido);
+      // repetido++;
     }
     //izquierda
     if (tab->jugada[j].x == result.x && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == ficha_oponente){
-      
-      find(tab, result.x, result.y, 4, player->ficha, ficha_oponente, plays);
+      printf("5 - [%d - %d] | ORIGEN: %d |\n", tab->jugada[j].x, tab->jugada[j].y, j);
+      find(tab, result.x, result.y, 4, player->ficha, ficha_oponente, plays, repetido);
+      // repetido++;
     }
-    //diagonal inf izq
+    //diagonal inf izq -- --
     if (tab->jugada[j].x == result.x + 1 && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == ficha_oponente){
-
-      find(tab, result.x, result.y, 6, player->ficha, ficha_oponente, plays);
+      printf("6 - [%d - %d] | ORIGEN: %d |\n", tab->jugada[j].x, tab->jugada[j].y, j);
+      find(tab, result.x, result.y, 6, player->ficha, ficha_oponente, plays, repetido);
+      // repetido++;
     }
-    //abajo
+    //abajo -- -- --
     if (tab->jugada[j].x == result.x + 1 && tab->jugada[j].y == result.y && tab->jugada[j].ficha == ficha_oponente){
-            
-      find(tab, result.x, result.y, 7, player->ficha, ficha_oponente, plays);
+      printf("7 - [%d - %d] | ORIGEN: %d |\n", tab->jugada[j].x, tab->jugada[j].y, j);
+      find(tab, result.x, result.y, 7, player->ficha, ficha_oponente, plays, repetido);
+      // repetido++;
     }
-    //diagonal inf der
+    //diagonal inf der -- --
     if (tab->jugada[j].x == result.x + 1 && tab->jugada[j].y == result.y + 1 && tab->jugada[j].ficha == ficha_oponente){
-
-      find(tab, result.x, result.y, 8, player->ficha, ficha_oponente, plays);
+      printf("8 - [%d - %d] | ORIGEN: %d |\n", tab->jugada[j].x, tab->jugada[j].y, j);
+      find(tab, result.x, result.y, 8, player->ficha, ficha_oponente, plays, repetido);
+      // repetido++;
     }
     j++;
   }
@@ -347,39 +344,78 @@ jugadaPosible* findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosib
     6DIAG-INF-IZQ | 7-ABAJO  | 8V-INF-DER
     [+1 -1]       | [+1 0]   | [+1 +1]
   */
-  return plays;
 }
 
-void validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
-  printf("Ingresa una jugada valida cachito, y mas te vale que sea valida :)");
-  // scanf("%d%d",
+//vALIDAR QUE LA JUGADA INGRESADA PERTENEZCA A LAS JUGADAS VALIDAS
+jugadaPosible validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
+  jugadaPosible failPlay;
+  jugadaPosible play;
+  
+  int x, y;
+  bool encontrado = false;
 
-  // );
   //si las coordenadas que se ingresan estan en el array de jugadasPosibles, que seria el valor de la casilla vacia, todo OK
   //sino jugada invalida y que vuela a intentarlo
+  int topeDeIntentos = 10;
+  int i;
+  while(!encontrado && topeDeIntentos > 0){
+    printf("Ingresa una jugada valida cachito, y mas te vale que sea valida :)\n");
+    scanf("%d%d",
+      &x,
+      &y
+    );
 
-  //si jugada OK, hay que pasarla a la funcion de ingresar jugada, con los valores que correspondan
+    if((x < 0 && x < 9) && (y < 0 && y < 9)){
+      for (i = 0; i < 64; i++){
+        if(jugadasPosibles[i].coord_fin[0].x == x && jugadasPosibles[i].coord_fin[0].y == y && jugadasPosibles[i].isPlay == true){
+          play.coord_inicio[0].x = jugadasPosibles[i].coord_inicio[0].x;
+          play.coord_inicio[0].y = jugadasPosibles[i].coord_inicio[0].y;
+          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[0].x;
+          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[0].y;
+          play.isPlay = true;
+          strcpy(play.direccion, jugadasPosibles[i].direccion);
+          encontrado = true;
+        }
+      }
+
+      if(encontrado){
+        printf("Felicidades, ingresaste una jugada valida :)\n");
+      }else{
+        printf("Oops, %d - %d es una casilla invalida cachito :(\n", x, y);
+      }
+    }else{
+      topeDeIntentos--;
+    }
+  }
+
+  //SI LLEGO AL TOPE DE INTENTOS ES PORQUE EL JUGADOR INGRESO CUALQUIER COSA MENOS UN NUMERO :(
+  if(topeDeIntentos <= 0){
+    failPlay.coord_inicio[0].x = -1,
+    failPlay.coord_inicio[0].y = -1,
+    failPlay.coord_fin[0].x = -1,
+    failPlay.coord_fin[0].y = -1,
+    failPlay.isPlay = false,
+    strcpy(failPlay.direccion, "none");
+
+    return failPlay;
+  }
+
+  //SI LLEGO HASTA ACA EN TEORIA SE INGRESO UNA JUGADA VALIDA, SE DEVUELVE
+
+  return play;
 }
 
-/**FUNCION IMPORTANTE
- * Deberia tomar como valores una coordenada de inicio, una coordenada de fin y una direccion
- * y modificar todas las fichas que se vean afectadas en la jugada
- */
-void ingresarJugada(jugador player[], int id, tablero* tab, jugadaPosible* play) {
-  //aumenta el contador de turno 
-  player[id].turno+=1;
-  int turn = player[id].turno;
-  char ficha = player[id].ficha;
-  int x_inicio = play->coord_inicio.x;
-  int y_inicio = play->coord_inicio.y;
-  int x_fin = play->coord_fin.x;
-  int y_fin = play->coord_fin.y;
+//INGRESAR UNA JUGADA, Y CAMBIAR LAS FICHAS AFECTADAS EN DICHA JUGADA
+//return 1 si salio todo bien | return 0 si salio todo como el culo
+int ingresarJugada(tablero* tab, jugadaPosible* play) {
+  //ingresar al tablero la jugada del usuario impactando en las fichas que corresponda
+  /* Conseguir Coordenada de inicio | coordenada de fin | direccion */
+  
+  
+  /* Actualizar Tablero */
 
-  //revisar-------------------------------------------------------°!!!!!!!!
-  // tab->jugada[tab->casila_id].x = x_inicio;
-  // tab->jugada[tab->casila_id].y = y_inicio;
-  // tab->jugada[tab->casila_id].ficha = ficha;
-  // tab->casila_id++;
+
+
 }
 
 void asignarFicha(jugador player[]){//revisar que sea aleatorio realmente
@@ -410,7 +446,13 @@ void iniciarTablero(tablero* tab){
   }
 
   //colocar fichas en la posicion inicial
-  tab->jugada[27].x = 5;
+
+  tab->jugada[26].x = 4;
+  tab->jugada[26].y = 3;
+  tab->jugada[26].ficha = 'X';
+  tab->jugada[26].empty = false;
+  
+  tab->jugada[27].x = 4;
   tab->jugada[27].y = 4;
   tab->jugada[27].ficha = 'X';
   tab->jugada[27].empty = false;
@@ -420,7 +462,12 @@ void iniciarTablero(tablero* tab){
   tab->jugada[28].ficha = 'X';
   tab->jugada[28].empty = false;
   
-  tab->jugada[35].x = 4;
+  tab->jugada[34].x = 5;
+  tab->jugada[34].y = 3;
+  tab->jugada[34].ficha = 'O';
+  tab->jugada[34].empty = false;
+  
+  tab->jugada[35].x = 5;
   tab->jugada[35].y = 4;
   tab->jugada[35].ficha = 'O';
   tab->jugada[35].empty = false;
@@ -431,11 +478,13 @@ void iniciarTablero(tablero* tab){
   tab->jugada[36].empty = false;
 }
 
+//Enumera las jugadas validas para todas las fichas del jugador actual
 void posicionFichas(jugador* player, tablero* tab, jugadaPosible play[]){
   for (int i = 0; i < 64; i++)
   {
+    //busca las casillas que tengan la ficha del jugador actual y llama a findplay para cada ficha encontrada
     if(tab->jugada[i].ficha == player->ficha){
-        findPlay(player, tab, tab->jugada[i].x, tab->jugada[i].y, play); //findPlay(jugador player[], tablero* tab, int x, int y, jugadaPosible plays[])
+        findPlay(player, tab, tab->jugada[i].x, tab->jugada[i].y, play); 
     }
   }
 }
@@ -551,11 +600,15 @@ int main() {
 
   jugador player = actualizarTurno(jugadores);
   
+  //HACE UN BARRIDO DE TODAS LAS FICHAS DEL JUGADOR ACTUAL Y BUSCA SUS JUGADAS VALIDAS
   posicionFichas(&player, &tab, play);
 
-  showPlays(play);
+  //MUESTRA LAS JUGADAS VALIDAS (FALTA RESETEARLAS PARA ORTO TURNO)
+  showPlays(play); 
 
   renderTablero(&tab);
+
+  validarJugada(&player, play);
 
   showInfo(jugadores);
 } 
