@@ -43,13 +43,15 @@ void iniciarPlays (jugadaPosible plays[]){
       plays[i].coord_fin[2].y = 0;
       plays[i].isPlay = false;
   }
+
+  printf("LINEA 47 Jugadas iniciadas con exito\n");
 }
 
 void showPlays (jugadaPosible plays[]){
   for(int i = 0; i < 64; i++){
     if(plays[i].isPlay == 1){
-      printf("%d -> jugada valida en: [%d - %d] [%d - %d] [%d - %d] => 1|%d - %d| 2|%d - %d| 3|%d - %d| direccion: %s Es jugada: %d\n", 
-        i,
+      printf("\n-> jugada valida en:\n [%d - %d]\njugada1|%d - %d|\njugada2|%d - %d|\njugada3|%d - %d|\nEs jugada: %d\n", 
+        // i,
         plays[i].coord_inicio.x,
         plays[i].coord_inicio.y,
         plays[i].coord_fin[0].x,
@@ -58,7 +60,7 @@ void showPlays (jugadaPosible plays[]){
         plays[i].coord_fin[1].y,
         plays[i].coord_fin[2].x,
         plays[i].coord_fin[2].y,
-        plays[i].direccion,
+        // plays[0].direccion,
         plays[i].isPlay
       );
     }
@@ -66,23 +68,30 @@ void showPlays (jugadaPosible plays[]){
 }
 
 void savePlays(jugadaPosible plays[], int index, int x, int y, int fin_x, int fin_y, char direccion[]){
-  for (int i = 0; i < 64; i++)
-  {
+  for (int i = 0; i < 64; i++){
     //quiere decir que es un espacio vacio para guardar
-    if(plays[i].coord_inicio.x == 0 && plays[i].coord_inicio.y == 0){ 
+    if(plays[i].isPlay == 0){ 
       plays[i].coord_inicio.x = x;
       plays[i].coord_inicio.y = y;
       plays[i].coord_fin[0].x = fin_x;
       plays[i].coord_fin[0].y = fin_y;
-      plays[i].isPlay = true;
-      strcpy(plays[i].direccion, direccion);
+      plays[i].isPlay = 1;
+      // strcpy(plays[i].direccion, direccion);
+      break;
     //quiere decir que para ese valor de origen existen mas direcciones de jugadas posibles
-    }else if(plays[i].coord_inicio.x == x && plays[i].coord_inicio.y == y){ 
-      plays[i].coord_fin[1].x = fin_x;
-      plays[i].coord_fin[1].y = fin_y;
+    }
+    else if(plays[i].coord_inicio.x == x && plays[i].coord_inicio.y == y){
+      if(plays[i].coord_fin[1].x == 0 && plays[i].coord_fin[1].y == 0){
+        plays[i].coord_fin[1].x = fin_x;
+        plays[i].coord_fin[1].y = fin_y;
+        break;
+      }else{
+        plays[i].coord_fin[2].x = fin_x;
+        plays[i].coord_fin[2].y = fin_y;
+        break;
+      }
     }
   }
-  
 }
 
 //LUEGO DE ENCONTRAR CASILLAS ADYACENTES SEGUIR BUSCANDO EN LA DIRECCION QUE CORRESPONDA
@@ -341,7 +350,7 @@ void findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosible plays[]
 }
 
 //vALIDAR QUE LA JUGADA INGRESADA PERTENEZCA A LAS JUGADAS VALIDAS
-jugadaPosible validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
+/*jugadaPosible validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
   jugadaPosible failPlay;
   jugadaPosible play;
   
@@ -397,7 +406,7 @@ jugadaPosible validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
   //SI LLEGO HASTA ACA EN TEORIA SE INGRESO UNA JUGADA VALIDA, SE DEVUELVE
 
   return play;
-}
+}*/
 
 //INGRESAR UNA JUGADA, Y CAMBIAR LAS FICHAS AFECTADAS EN DICHA JUGADA
 //return 1 si salio todo bien | return 0 si salio todo como el culo
@@ -602,7 +611,7 @@ int main() {
 
   renderTablero(&tab);
 
-  validarJugada(&player, play);
+  // validarJugada(&player, play);
 
   showInfo(jugadores);
 } 
