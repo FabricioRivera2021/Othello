@@ -40,6 +40,10 @@ typedef struct {
   bool ultimoTurno; //para saber quien tuvo el ultimo turno
 } jugador;
 
+void actualizarTablero(tablero* tab, ) {
+
+}
+
 void iniciarPlays (jugadaPosible plays[]){
   for(int i = 0; i < 64; i++){
       plays[i].coord_inicio.x = 0;
@@ -453,7 +457,9 @@ int ingresarJugada(tablero* tab, playDelUsuario* play, jugadaPosible plays[]) {
     if(play->x == plays[i].coord_fin[0].x && play->y == plays[i].coord_fin[0].y
       || play->x == plays[i].coord_fin[1].x && play->y == plays[i].coord_fin[1].y
       || play->x == plays[i].coord_fin[2].x && play->y == plays[i].coord_fin[2].y){
-        printf("LINEA 456: %d - %d\n", plays[i].coord_inicio.x, plays[i].coord_inicio.y);
+      
+      printf("LINEA 456: %d - %d\n", plays[i].coord_inicio.x, plays[i].coord_inicio.y);
+    
     }
   }
 
@@ -461,11 +467,12 @@ int ingresarJugada(tablero* tab, playDelUsuario* play, jugadaPosible plays[]) {
   int id = 0;
   for (int j = 1; j <= 8; j++) {
     for (int k = 1; k <= 8; k++) {
-        tab->jugada[id].x = j;
-        tab->jugada[id].y = k;
-        tab->jugada[id].ficha = '_';
-        tab->jugada[id].empty = true;
-        id++;
+      if(play->x == j && play->y == k
+        || play->x == j - 1 && play->y == k){
+        tab->jugada[id].ficha = 'X';
+        printf("encontrado el %d %d", k, j);
+      }
+      id++;
     }
   }
 
@@ -661,6 +668,8 @@ int main() {
   printf("%d", result);
 
   showInfo(jugadores);
+
+  renderTablero(&tab);
 
   printf("fin de ejecucion");
 } 
