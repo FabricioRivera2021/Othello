@@ -398,12 +398,19 @@ playDelUsuario validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) 
     
     if((x > 0 && x < 9) && (y > 0 && y < 9)){
       for (i = 0; i < 64; i++){
-        if( (jugadasPosibles[i].coord_fin[0].x == x && jugadasPosibles[i].coord_fin[0].y == y) 
-            || (jugadasPosibles[i].coord_fin[1].x == x && jugadasPosibles[i].coord_fin[1].y == y) 
-            || (jugadasPosibles[i].coord_fin[2].x == x && jugadasPosibles[i].coord_fin[2].y == y) 
-            && jugadasPosibles[i].isPlay == true){
-          play.x = jugadasPosibles[i].coord_inicio.x;
-          play.y = jugadasPosibles[i].coord_inicio.y;
+        if(jugadasPosibles[i].coord_fin[0].x == x && jugadasPosibles[i].coord_fin[0].y == y && jugadasPosibles[i].isPlay == true) {
+          play.x = jugadasPosibles[i].coord_fin[0].x;
+          play.y = jugadasPosibles[i].coord_fin[0].y;
+          encontrado = true;
+        }
+        else if(jugadasPosibles[i].coord_fin[1].x == x && jugadasPosibles[i].coord_fin[1].y == y && jugadasPosibles[i].isPlay == true) {
+          play.x = jugadasPosibles[i].coord_fin[1].x;
+          play.y = jugadasPosibles[i].coord_fin[1].y;
+          encontrado = true;
+        }
+        else if(jugadasPosibles[i].coord_fin[2].x == x && jugadasPosibles[i].coord_fin[2].y == y && jugadasPosibles[i].isPlay == true) {
+          play.x = jugadasPosibles[i].coord_fin[2].x;
+          play.y = jugadasPosibles[i].coord_fin[2].y;
           encontrado = true;
         }
       }
@@ -413,6 +420,7 @@ playDelUsuario validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) 
       }else{
         printf("Oops, %d - %d es una casilla invalida :(\n\n", x, y);
       }
+      
     }else{
       topeDeIntentos--;
       break;
@@ -433,13 +441,34 @@ playDelUsuario validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) 
 //INGRESAR UNA JUGADA, Y CAMBIAR LAS FICHAS AFECTADAS EN DICHA JUGADA
 //return 1 si salio todo bien | return 0 si salio todo como el culo
 int ingresarJugada(tablero* tab, playDelUsuario* play, jugadaPosible plays[]) {
+
+  //HARDCODEADO POR AHORA
+  char ficha_a_insertar = 'X';
+
+  jugadaPosible playParaIngresar;
   //ingresar al tablero la jugada del usuario impactando en las fichas que corresponda
   /* Conseguir Coordenada de inicio | jugadas de esa coordenada          | direccion de esas jugadas */
-  //play.x play.y                     plays[index].coord_fin[index].x       direccion
-  //                                  plays[index].coord_fin[index].y
 
-  
-  /* Actualizar Tablero */
+  for(int i = 0; i < 64; i++){
+    if(play->x == plays[i].coord_fin[0].x && play->y == plays[i].coord_fin[0].y
+      || play->x == plays[i].coord_fin[1].x && play->y == plays[i].coord_fin[1].y
+      || play->x == plays[i].coord_fin[2].x && play->y == plays[i].coord_fin[2].y){
+        printf("LINEA 456: %d - %d\n", plays[i].coord_inicio.x, plays[i].coord_inicio.y);
+    }
+  }
+
+  /* Actualizar Tablero - POR AHORA CAMBIAR "O" POR "X"s */ 
+  int id = 0;
+  for (int j = 1; j <= 8; j++) {
+    for (int k = 1; k <= 8; k++) {
+        tab->jugada[id].x = j;
+        tab->jugada[id].y = k;
+        tab->jugada[id].ficha = '_';
+        tab->jugada[id].empty = true;
+        id++;
+    }
+  }
+
   return 1;
 }
 
