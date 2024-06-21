@@ -40,8 +40,54 @@ typedef struct {
   bool ultimoTurno; //para saber quien tuvo el ultimo turno
 } jugador;
 
-void actualizarTablero(tablero* tab, ) {
+//si hay mas de una direccion, obtener las coordenadas de esos origenes
+// coordenada getOrigenExtra(coordenada* cord, jugadaPosible plays[]) {
+//   for (int i = 0; i < 64; i++){
+//     play
+//   }
+  
+// }
 
+//obtener la direccion para una coordenada de jugada en concreto
+play_direccions getDireccion (jugadaPosible* play, jugadaPosible plays[]) {
+  play_direccions direcciones[3];
+
+
+
+  return *direcciones;
+}
+
+//devuelve la coordenada a partir de una id de casilla
+coordenada getCoordenada (tablero* tab, int id) {
+  coordenada coord;
+
+  coord.ficha = '!';
+  coord.empty = false;
+
+  int ident = 0;
+  for (int j = 1; j <= 8; j++) {
+    for (int k = 1; k <= 8; k++) {
+      if(ident == id){
+        coord.x = j;
+        coord.y = k;
+        return coord;
+      }
+      ident++;
+    }
+  }
+}
+
+//devuelve el id de la casilla para una coordenada en concreto
+int getIdCasilla (tablero* tab, int x, int y) {
+  int id = 0;
+  for (int j = 1; j <= 8; j++) {
+    for (int k = 1; k <= 8; k++) {
+      if(tab->jugada[id].x == x && tab->jugada[id].y == y){
+        return id;
+      }
+      id++;
+    }
+  }
 }
 
 void iniciarPlays (jugadaPosible plays[]){
@@ -377,8 +423,8 @@ void findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosible plays[]
 
 //VALIDAR QUE LA JUGADA INGRESADA PERTENEZCA A LAS JUGADAS VALIDAS
 //RETORNA EL VALOR DE LA COORDENADA DE ORIGEN
-playDelUsuario validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
-  playDelUsuario play;
+jugadaPosible validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
+  jugadaPosible play;
   int x, y;
   bool encontrado = false;
 
@@ -403,18 +449,27 @@ playDelUsuario validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) 
     if((x > 0 && x < 9) && (y > 0 && y < 9)){
       for (i = 0; i < 64; i++){
         if(jugadasPosibles[i].coord_fin[0].x == x && jugadasPosibles[i].coord_fin[0].y == y && jugadasPosibles[i].isPlay == true) {
-          play.x = jugadasPosibles[i].coord_fin[0].x;
-          play.y = jugadasPosibles[i].coord_fin[0].y;
+          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
+          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
+          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[0].x;
+          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[0].y;
+          strcpy(play.play_direccion[0].direccion, jugadasPosibles[i].play_direccion[0].direccion);
           encontrado = true;
         }
         else if(jugadasPosibles[i].coord_fin[1].x == x && jugadasPosibles[i].coord_fin[1].y == y && jugadasPosibles[i].isPlay == true) {
-          play.x = jugadasPosibles[i].coord_fin[1].x;
-          play.y = jugadasPosibles[i].coord_fin[1].y;
+          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
+          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
+          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[1].x;
+          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[1].y;
+          strcpy(play.play_direccion[1].direccion, jugadasPosibles[i].play_direccion[1].direccion);
           encontrado = true;
         }
         else if(jugadasPosibles[i].coord_fin[2].x == x && jugadasPosibles[i].coord_fin[2].y == y && jugadasPosibles[i].isPlay == true) {
-          play.x = jugadasPosibles[i].coord_fin[2].x;
-          play.y = jugadasPosibles[i].coord_fin[2].y;
+          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
+          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
+          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[2].x;
+          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[2].y;
+          strcpy(play.play_direccion[2].direccion, jugadasPosibles[i].play_direccion[2].direccion);
           encontrado = true;
         }
       }
@@ -432,9 +487,8 @@ playDelUsuario validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) 
   }
 
   //SI LLEGO AL TOPE DE INTENTOS ES PORQUE EL JUGADOR INGRESO CUALQUIER COSA MENOS UN NUMERO :(
+  //y el programa crashea!!
   if(topeDeIntentos <= 0){
-    play.x = -1;
-    play.y = -1;
     printf("Error, saliendo del progama... se ingreso algo que no era un numero\n");
   }
 
@@ -442,39 +496,129 @@ playDelUsuario validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) 
   return play;
 }
 
-//INGRESAR UNA JUGADA, Y CAMBIAR LAS FICHAS AFECTADAS EN DICHA JUGADA
-//return 1 si salio todo bien | return 0 si salio todo como el culo
-int ingresarJugada(tablero* tab, playDelUsuario* play, jugadaPosible plays[]) {
-
+//INGRESAR UNA JUGADA, Y CAMBIAR LAS FICHAS AFECTADAS EN DICHA JUGADA return 1 si OK | return 0 si MAL
+int ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[]) {
   //HARDCODEADO POR AHORA
   char ficha_a_insertar = 'X';
+  int id[3] = {0};
+  // SI las coordenadas de final tienen mas de un origen hay que afectar mas de una direccion, sino... 1 sola direccion
 
-  jugadaPosible playParaIngresar;
-  //ingresar al tablero la jugada del usuario impactando en las fichas que corresponda
-  /* Conseguir Coordenada de inicio | jugadas de esa coordenada          | direccion de esas jugadas */
-
-  for(int i = 0; i < 64; i++){
-    if(play->x == plays[i].coord_fin[0].x && play->y == plays[i].coord_fin[0].y
-      || play->x == plays[i].coord_fin[1].x && play->y == plays[i].coord_fin[1].y
-      || play->x == plays[i].coord_fin[2].x && play->y == plays[i].coord_fin[2].y){
-      
-      printf("LINEA 456: %d - %d\n", plays[i].coord_inicio.x, plays[i].coord_inicio.y);
-    
+  //conseguir coordenadas de fin de la jugada del usuario
+  //AL SER UNA COORDENADA LA QUE INGRESA EN USUARIO VIENE SIEMPRE EN EL INDEX 0 -> jugada->coord_fin[0]
+  int count = 0;
+  for (int i = 0; i < 64; i++){
+    if(jugada->coord_fin[0].x == plays[i].coord_fin[0].x && jugada->coord_fin[0].y == plays[i].coord_fin[0].y){
+      //get plays->coord_inicio.x and plays->coord_inicio.y
+      id[count] = getIdCasilla(tab, plays[i].coord_inicio.x, plays[i].coord_inicio.y);
+      count++;
+    }else if(jugada->coord_fin[0].x == plays[i].coord_fin[1].x && jugada->coord_fin[0].y == plays[i].coord_fin[1].y){
+      id[count] = getIdCasilla(tab, plays[i].coord_inicio.x, plays[i].coord_inicio.y);
+      count++;
+    }else if(jugada->coord_fin[0].x == plays[i].coord_fin[2].x && jugada->coord_fin[0].y == plays[i].coord_fin[2].y){
+      id[count] = getIdCasilla(tab, plays[i].coord_inicio.x, plays[i].coord_inicio.y);
+      count++;
     }
   }
+  
+  for (int i = 0; i < count; i++){// count es la cantidad de direcciones que afecta la jugada
+    printf("LINEA 518 id de casilla  %d\n", id[i]);
+  }
 
-  /* Actualizar Tablero - POR AHORA CAMBIAR "O" POR "X"s */ 
-  int id = 0;
-  for (int j = 1; j <= 8; j++) {
-    for (int k = 1; k <= 8; k++) {
-      if(play->x == j && play->y == k
-        || play->x == j - 1 && play->y == k){
-        tab->jugada[id].ficha = 'X';
-        printf("encontrado el %d %d", k, j);
+  //1 direccion | if count == 0
+  int casillasID[8] = { 0 };
+  int count2 = 0;
+  int origen_x = jugada->coord_inicio.x;
+  int origen_y = jugada->coord_inicio.y;
+
+ 
+  
+  if(count == 1){
+    if(strcmp(jugada->play_direccion[0].direccion, "diag_sup_izq") == 0){
+      //mientras la coordenada de origen no sea la coordenada de final hacer el coso coso de las x e y
+      //-1 -1
+      while (origen_x != jugada->coord_fin[0].x && origen_y != jugada->coord_fin[0].y){
+        printf("1origen.> %d - %d final.> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
+        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
+        origen_x--;
+        origen_y--;
+        count2++;
       }
-      id++;
+    }else if(strcmp(jugada->play_direccion[0].direccion, "vertical+")  == 0){
+      //-1 0
+      while (origen_x != jugada->coord_fin[0].x && origen_y != jugada->coord_fin[0].y){
+        printf("2origen.> %d - %d final.> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
+        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
+        origen_x--;
+        count2++;
+      }
+    }else if(strcmp(jugada->play_direccion[0].direccion, "diag_sup_der")  == 0){
+      //-1 +1
+      while (origen_x != jugada->coord_fin[0].x && origen_y != jugada->coord_fin[0].y){
+        printf("3origen.> %d - %d final.> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
+        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
+        origen_x--;
+        origen_y++;
+        count2++;
+      }
+    }else if(strcmp(jugada->play_direccion[0].direccion, "horizontal-")  == 0){
+      //0 -1
+      while (origen_x != jugada->coord_fin[0].x || origen_y != jugada->coord_fin[0].y){
+        printf("4origen.> %d - %d final.> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
+        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
+        origen_y--;
+        count2++;
+      }
+    }else if(strcmp(jugada->play_direccion[0].direccion, "horizontal+")  == 0){
+      //0 +1
+      while (origen_x != jugada->coord_fin[0].x || origen_y != jugada->coord_fin[0].y){
+        printf("5origen.> %d - %d final.> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
+        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
+        origen_y++;
+        count2++;
+      }
+    }else if(strcmp(jugada->play_direccion[0].direccion, "diag_inf_izq")  == 0){
+      //+1 -1
+      while (origen_x != jugada->coord_fin[0].x && origen_y != jugada->coord_fin[0].y){
+        printf("6origen.> %d - %d final.> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
+        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
+        origen_x++;
+        origen_y--;
+        count2++;
+      }
+    }else if(strcmp(jugada->play_direccion[1].direccion, "vertical-") == 0){
+      //+1 0
+      while (origen_x != jugada->coord_fin[0].x || origen_y != jugada->coord_fin[0].y){
+        printf("7origen.> %d - %d final.> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
+        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
+        origen_x++;
+        count2++;
+      }
+    }else if(strcmp(jugada->play_direccion[0].direccion, "diag_inf_der")  == 0){
+      //+1 +1
+      while (origen_x != jugada->coord_fin[0].x && origen_y != jugada->coord_fin[0].y){
+        printf("8origen.> %d - %d final.> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
+        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
+        origen_x++;
+        origen_y++;
+        count2++;
+      }
     }
+
+    for (int i = 0; i < 3; i++)
+    {
+      printf("%d\n", casillasID[i]);
+    }
+    
   }
+  
+  //2 direcciones
+  // if(count == 0){
+  //   getCoordenada(&tab, id);
+  // }
+  
+  //3 direcciones !!!
+
+
 
   return 1;
 }
@@ -508,9 +652,14 @@ void iniciarTablero(tablero* tab){
 
   //colocar fichas en la posicion inicial
   
+  tab->jugada[26].x = 4;
+  tab->jugada[26].y = 3;
+  tab->jugada[26].ficha = 'X';
+  tab->jugada[26].empty = false;
+  
   tab->jugada[27].x = 4;
   tab->jugada[27].y = 4;
-  tab->jugada[27].ficha = 'O';
+  tab->jugada[27].ficha = 'X';
   tab->jugada[27].empty = false;
 
   tab->jugada[28].x = 4;
@@ -520,13 +669,18 @@ void iniciarTablero(tablero* tab){
   
   tab->jugada[35].x = 5;
   tab->jugada[35].y = 4;
-  tab->jugada[35].ficha = 'X';
+  tab->jugada[35].ficha = 'O';
   tab->jugada[35].empty = false;
 
   tab->jugada[36].x = 5;
   tab->jugada[36].y = 5;
   tab->jugada[36].ficha = 'O';
   tab->jugada[36].empty = false;
+
+  tab->jugada[44].x = 6;
+  tab->jugada[44].y = 5;
+  tab->jugada[44].ficha = 'O';
+  tab->jugada[44].empty = false;
 }
 
 //Enumera las jugadas validas para todas las fichas del jugador actual
@@ -660,16 +814,14 @@ int main() {
 
   renderTablero(&tab);
 
-  playDelUsuario jugada = validarJugada(&player, play);
+  jugadaPosible jugada = validarJugada(&player, play);
 
-  printf("Se ingreo una jugada para la ficha X en [%d - %d]\n", jugada.x, jugada.y);
+  // printf("Se ingreo una jugada para la ficha X en [%d - %d]\n", jugada.coord_fin[0].x, jugada.coord_fin[0].y);
 
   int result = ingresarJugada(&tab, &jugada, play);
-  printf("%d", result);
+  // printf("%d", result);
 
   showInfo(jugadores);
-
-  renderTablero(&tab);
 
   printf("fin de ejecucion");
 } 
