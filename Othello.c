@@ -547,8 +547,11 @@ jugadaPosible validarJugada(jugador* player, jugadaPosible jugadasPosibles[]) {
   int topeDeIntentos = 5;
   int i;
   while(!encontrado && topeDeIntentos > 0){
-    printf("Turno de | %s |\n", player->nombre);
-    printf("ingresa una jugada... \n");
+    if((strcmp(player->nombre, "cachito") == 0)){
+      printf("Hola cachito!! :)\n");
+    }
+    printf("Turno --> %s \n", player->nombre);
+    printf("ingresa una jugada: \n");
     scanf("%d%d",
       &x,
       &y
@@ -657,7 +660,7 @@ void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], 
   }
   
   //----> queda guarrdado en jugadaMultiple
-  printf("coordenadas de origen LINEA 630\n [%d - %d] -> %s [%d - %d] -> %s\n", 
+  printf("coordenadas de origen LINEA 660\n [%d - %d] -> %s [%d - %d] -> %s\n", 
     jugadaMultiple[0].coord_inicio.x,
     jugadaMultiple[0].coord_inicio.y,
     jugadaMultiple[0].play_direccion[0].direccion,
@@ -733,7 +736,7 @@ void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], 
   }
 
   if(count > 3){
-    printf("LINEA 726 count mayor a 3, error fuera de rango");
+    printf("LINEA 736 count mayor a 3, error fuera de rango");
   }
 
 
@@ -792,8 +795,8 @@ void posicionFichas(jugador* player, tablero* tab, jugadaPosible play[]){
 }
 
 void asignarFicha(jugador* player){//revisar que sea aleatorio realmente
-  double valor = (double)rand() / (double)RAND_MAX;
-  char resultFicha = (valor >= 0.5) ? 'X' : 'O';
+  int r = rand() % 21;
+  char resultFicha = (r > 10) ? 'X' : 'O';
 
   if(resultFicha == 'X'){
     player->ficha = 'X';
@@ -812,7 +815,7 @@ void crearJugador(jugador player[]) {
     player[0].turno = 0;
     player[0].turnoActual = false;
     player[0].id = 0;
-    printf("%c\n", player[0].ficha);
+    printf("Se te asigno la ficha: %c\n", player[0].ficha);
     printf("\n");
 
     if(player[0].ficha == 'X'){
@@ -929,12 +932,12 @@ int main() {
   int noHayJugada = 0;
   int turnosRestantes = 60;
 
+  srand(time(NULL));
+
   printf("\n");
   printf("Bienvenido :)\n");
   printf("para ingresar una jugada primero se ingresa el numero de fila (se presiona enter) y luego el de columna (y se presiona enter nuevamente)...\n");
   printf("Gracias, gracias a ti... no hay de que :)\n\n");
-
-  srand(time(NULL));
 
   crearJugador(jugadores);
 
@@ -983,8 +986,9 @@ int main() {
     // showPlays(play); 
 
     //MUESTRA EL ESTADO ACTUAL DEL TABLERO
-    renderTablero(&tab);
     showInfo(jugadores); //con la info de los jugadores
+    renderTablero(&tab);
+    printf("\n\n");
 
     //PIDE UNA COORDENADA DE JUGADA VALIDA Y LA GUARDA EN "JUGADA"
     jugada = validarJugada(&player, play);
