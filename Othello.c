@@ -37,13 +37,41 @@ typedef struct {
   char nombre[60]; 
   char ficha; //ficha que este usando el jugador
   int turno; //contador de turnos
-  bool ultimoTurno; //para saber quien tuvo el ultimo turno
+  bool turnoActual; //para saber quien tuvo el ultimo turno
 } jugador;
 
-//ACTUALIZAR FICHAS DEPENDIENDO DEL ID Y DE LA FICHA ACTUAL DE LA JUGADA
-void updateFicha(tablero* tab, int id) {
 
-  tab->jugada[id].ficha = 'X';
+void mostrarConteoFichas(int negras, int blancas){
+  printf("Blancas: %d\n", blancas);
+  printf("Negras: %d\n", negras);
+}
+
+int contarFichas(tablero* tab, char ficha){
+  int count = 0;
+  for (int i = 0; i < 64; i++){
+    if(tab->jugada[i].ficha == ficha){
+      count++;
+    }
+  }
+
+  return count;
+}
+
+int chckearSiHayJugadas(jugadaPosible plays[]){
+  for (int i = 0; i < 64; i++){
+    if(plays[i].isPlay){
+      return 1;
+      break;
+    }
+  }
+
+  return 0;
+}
+
+//ACTUALIZAR FICHAS DEPENDIENDO DEL ID Y DE LA FICHA ACTUAL DE LA JUGADA
+void updateFicha(tablero* tab, int id, char ficha) {
+
+  tab->jugada[id].ficha = ficha;
 }
 
 //si hay mas de una direccion, obtener las coordenadas de esos origenes
@@ -200,7 +228,7 @@ void getAllOrigins(jugadaPosible plays[], jugadaPosible* play, jugadaPosible jug
       jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[0].x;
       jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[0].y;
       jugadaMultiple[count].isPlay = true;
-      strcpy(jugadaMultiple[0].play_direccion[0].direccion, plays[i].play_direccion[0].direccion); 
+      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[0].direccion); 
       count++;
       continue;
     }
@@ -210,7 +238,7 @@ void getAllOrigins(jugadaPosible plays[], jugadaPosible* play, jugadaPosible jug
       jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[1].x;
       jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[1].y;
       jugadaMultiple[count].isPlay = true;
-      strcpy(jugadaMultiple[1].play_direccion[1].direccion, plays[i].play_direccion[1].direccion);
+      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[1].direccion);
       count++;
       continue;
     }
@@ -220,7 +248,7 @@ void getAllOrigins(jugadaPosible plays[], jugadaPosible* play, jugadaPosible jug
       jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[2].x;
       jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[2].y;
       jugadaMultiple[count].isPlay = true;
-      strcpy(jugadaMultiple[0].play_direccion[2].direccion, plays[i].play_direccion[2].direccion);
+      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[2].direccion);
       count++;
       continue;
     }
@@ -228,7 +256,6 @@ void getAllOrigins(jugadaPosible plays[], jugadaPosible* play, jugadaPosible jug
 }
 
 void obtenerIdDeCasillasAfectadas(int* count2, int resultado[], tablero* tab, char* direccion, int origen_x,int origen_y,int fin_x,int fin_y){
-
   *count2 = 0;
   int x, y;
 
@@ -272,10 +299,10 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
     while(l < 64){
         if(tab->jugada[l].x == x && tab->jugada[l].y == y - offset){
           if(y - offset == 0){
-            printf("fuera de tablero \n");
+            // printf("fuera de tablero \n");
             break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
-            printf("ficha del jugador actual \n");
+            // printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
             //guardar la play
@@ -293,10 +320,10 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
     while(l < 64){
         if(tab->jugada[l].x == x + offset && tab->jugada[l].y == y){
           if(x + offset == 9){
-            printf("fuera de tablero \n");
+            // printf("fuera de tablero \n");
             break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
-            printf("ficha del jugador actual \n");
+            // printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
             savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "vertical-");
@@ -313,10 +340,10 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
     while(l < 64){
         if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y - offset){
           if(y - offset == 0 || x - offset == 0){
-            printf("fuera de tablero \n");
+            // printf("fuera de tablero \n");
             break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
-            printf("ficha del jugador actual \n");
+            // printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
             savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "diag_sup_izq");
@@ -333,10 +360,10 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
     while(l < 64){
         if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y){
           if(x - offset == 0){
-            printf("fuera de tablero \n");
+            // printf("fuera de tablero \n");
             break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
-            printf("ficha del jugador actual \n");
+            // printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
             savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "vertical+");
@@ -353,10 +380,10 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
     while(l < 64){
         if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y + offset){
           if(x - offset == 0 || y + offset == 9){
-            printf("fuera de tablero \n");
+            // printf("fuera de tablero \n");
             break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
-            printf("ficha del jugador actual \n");
+            // printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
             savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "diag_sup_der");
@@ -373,10 +400,10 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
     while(l < 64){
         if(tab->jugada[l].x == x && tab->jugada[l].y == y + offset){
           if(y + offset == 9){
-            printf("fuera de tablero \n");
+            // printf("fuera de tablero \n");
             break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
-            printf("ficha del jugador actual \n");
+            // printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
             savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "horizontal+");
@@ -393,10 +420,10 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
     while(l < 64){
         if(tab->jugada[l].x == x + offset && tab->jugada[l].y == y - offset){
           if(x + offset == 9 || y - offset == 0){
-            printf("fuera de tablero \n");
+            // printf("fuera de tablero \n");
             break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
-            printf("ficha del jugador actual \n");
+            // printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
             savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "diag_inf_izq");
@@ -413,10 +440,10 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
     while(l < 64){
         if(tab->jugada[l].x == x + offset && tab->jugada[l].y == y + offset){
           if(x + offset == 9 || y + offset == 9){
-            printf("fuera de tablero \n");
+            // printf("fuera de tablero \n");
             break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
-            printf("ficha del jugador actual \n");
+            // printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
             savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "diag_inf_der");
@@ -437,23 +464,25 @@ void findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosible plays[]
   coordenada result;
   char ficha_oponente;
   int i = 0;
-  int j = 0;
+
+  int founded = 0;
+  
   while(i < 64){
     if (tab->jugada[i].x == x && tab->jugada[i].y == y){
       result.x = tab->jugada[i].x;
       result.y = tab->jugada[i].y;
-      result.ficha = tab->jugada[i].ficha;
-      result.empty = false;
       break;
     }
     i++;
   }
-  if(result.ficha == 'X'){
+
+  if(player->ficha == 'X'){
     ficha_oponente = 'O';
-  }else if(result.ficha == 'O'){
+  }else if(player->ficha == 'O'){
     ficha_oponente = 'X';
   }
 
+  int j = 0;
   while(j < 64){
     //diagonal sup izq
     if (tab->jugada[j].x == result.x - 1 && tab->jugada[j].y == result.y - 1 && tab->jugada[j].ficha == ficha_oponente){
@@ -505,10 +534,12 @@ void findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosible plays[]
 
 //VALIDAR QUE LA JUGADA INGRESADA PERTENEZCA A LAS JUGADAS VALIDAS
 //RETORNA EL VALOR DE LA COORDENADA DE ORIGEN
-jugadaPosible validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
+jugadaPosible validarJugada(jugador* player, jugadaPosible jugadasPosibles[]) {
   jugadaPosible play;
   int x, y;
   bool encontrado = false;
+
+  int showJugadasValidas = 0;
 
   //si las coordenadas que se ingresan estan en el array de jugadasPosibles, que seria el valor de la casilla vacia, todo OK
   //sino jugada invalida y que vuela a intentarlo
@@ -516,13 +547,8 @@ jugadaPosible validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
   int topeDeIntentos = 5;
   int i;
   while(!encontrado && topeDeIntentos > 0){
-    if(player[0].ultimoTurno == true){
-      printf("Turno de: %s\n", player[0].nombre);
-    }else{
-      printf("Turno de: %s\n", player[1].nombre);
-    }
-
-    printf("Ingresa una jugada...\n");
+    printf("Turno de | %s |\n", player->nombre);
+    printf("ingresa una jugada... \n");
     scanf("%d%d",
       &x,
       &y
@@ -556,10 +582,13 @@ jugadaPosible validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
         }
       }
 
-      if(encontrado){
-        printf("Felicidades, ingresaste una jugada valida :)\n\n");
-      }else{
+      if(!encontrado){
         printf("Oops, %d - %d es una casilla invalida :(\n\n", x, y);
+        showJugadasValidas++;
+        if(showJugadasValidas > 2){
+          showPlays(jugadasPosibles);
+          printf("\n\n");
+        }
       }
       
     }else{
@@ -579,7 +608,9 @@ jugadaPosible validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
 }
 
 //INGRESAR UNA JUGADA, Y CAMBIAR LAS FICHAS AFECTADAS EN DICHA JUGADA return 1 si OK | return 0 si MAL
-int ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[]) {
+void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], jugador* player) {
+  //conseguir la ficha del jugador actual
+  char ficha = player->ficha;
 
   int count = 0;
   jugadaPosible jugadaMultiple[3];
@@ -602,7 +633,6 @@ int ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[]) {
 
   // coordenada inicio[3];
   //HARDCODEADO POR AHORA
-  char ficha_a_insertar = 'X';
   int id[3] = {0};
   // SI las coordenadas de final tienen mas de un origen hay que afectar mas de una direccion, sino... 1 sola direccion
 
@@ -627,22 +657,23 @@ int ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[]) {
   }
   
   //----> queda guarrdado en jugadaMultiple
-  // printf("coordenadas de origen LINEA 642\n [%d - %d] -> %s [%d - %d] -> %s\n", 
-  //   jugadaMultiple[0].coord_inicio.x,
-  //   jugadaMultiple[0].coord_inicio.y,
-  //   jugadaMultiple[0].play_direccion[0].direccion,
-  //   jugadaMultiple[1].coord_inicio.x,
-  //   jugadaMultiple[1].coord_inicio.y,
-  //   jugadaMultiple[1].play_direccion[1].direccion,
-  //   jugadaMultiple[2].coord_inicio.x,
-  //   jugadaMultiple[2].coord_inicio.y
-  // );
+  printf("coordenadas de origen LINEA 630\n [%d - %d] -> %s [%d - %d] -> %s\n", 
+    jugadaMultiple[0].coord_inicio.x,
+    jugadaMultiple[0].coord_inicio.y,
+    jugadaMultiple[0].play_direccion[0].direccion,
+    jugadaMultiple[1].coord_inicio.x,
+    jugadaMultiple[1].coord_inicio.y,
+    jugadaMultiple[1].play_direccion[1].direccion,
+    jugadaMultiple[2].coord_inicio.x,
+    jugadaMultiple[2].coord_inicio.y
+  );
 
   //1 direccion | if count == 0
   int casillasID[8] = { 0 };
   int count2 = 0; //dependiendo de la cantidad de direcciones que hallan
 
   if(count == 1){
+    printf("1 jugada\n");
     obtenerIdDeCasillasAfectadas(
       &count2,
       casillasID,
@@ -655,18 +686,19 @@ int ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[]) {
     );
 
     for (int i = 0; i < count2; i++){
-      updateFicha(tab, casillasID[i]); //actualizar el tablero
+      updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
     }
   }
 
   //2 direcciones | if count == 1
   if(count == 2){
+    printf("2 jugada\n");
     for (int i = 0; i < 2; i++){
       obtenerIdDeCasillasAfectadas(
         &count2,
         casillasID,
         tab, 
-        jugadaMultiple[i].play_direccion[i].direccion,
+        jugadaMultiple[i].play_direccion[0].direccion,
         jugadaMultiple[i].coord_inicio.x,
         jugadaMultiple[i].coord_inicio.y,
         jugadaMultiple[i].coord_fin[0].x,
@@ -674,33 +706,38 @@ int ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[]) {
       );
 
       for (int i = 0; i < count2; i++){
-        updateFicha(tab, casillasID[i]); //actualizar el tablero
+        updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
       }
     }
   }
 
-
-  
   //3 direcciones !!!
+  if(count == 3){
+    printf("3 jugada\n");
+    for (int i = 0; i < 3; i++){
+      obtenerIdDeCasillasAfectadas(
+        &count2,
+        casillasID,
+        tab, 
+        jugadaMultiple[i].play_direccion[0].direccion,
+        jugadaMultiple[i].coord_inicio.x,
+        jugadaMultiple[i].coord_inicio.y,
+        jugadaMultiple[i].coord_fin[0].x,
+        jugadaMultiple[i].coord_fin[0].y
+      );
 
-
-
-  return 1;
-}
-
-void asignarFicha(jugador player[]){//revisar que sea aleatorio realmente
-  double valor = (double)rand() / (double)RAND_MAX;
-  char resultFicha = (valor >= 0.5) ? 'X' : 'O';
-
-  if(resultFicha == 'X'){
-    player[0].ficha = 'X';
-    player[1].ficha = 'O';
-  }else{
-    player[0].ficha = 'O';
-    player[1].ficha = 'X';
+      for (int i = 0; i < count2; i++){
+        updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
+      }
+    }
   }
-}
 
+  if(count > 3){
+    printf("LINEA 726 count mayor a 3, error fuera de rango");
+  }
+
+
+}
 //INICIAR TABLERO
 void iniciarTablero(tablero* tab){
   int id = 0;
@@ -714,17 +751,17 @@ void iniciarTablero(tablero* tab){
           id++;
       }
   }
-
+  
   //colocar fichas en la posicion inicial
   
-  tab->jugada[26].x = 4;
-  tab->jugada[26].y = 3;
-  tab->jugada[26].ficha = 'X';
-  tab->jugada[26].empty = false;
+  // tab->jugada[26].x = 4;
+  // tab->jugada[26].y = 3;
+  // tab->jugada[26].ficha = 'X';
+  // tab->jugada[26].empty = false;
   
   tab->jugada[27].x = 4;
   tab->jugada[27].y = 4;
-  tab->jugada[27].ficha = 'X';
+  tab->jugada[27].ficha = 'O';
   tab->jugada[27].empty = false;
 
   tab->jugada[28].x = 4;
@@ -734,7 +771,7 @@ void iniciarTablero(tablero* tab){
   
   tab->jugada[35].x = 5;
   tab->jugada[35].y = 4;
-  tab->jugada[35].ficha = 'O';
+  tab->jugada[35].ficha = 'X';
   tab->jugada[35].empty = false;
 
   tab->jugada[36].x = 5;
@@ -754,44 +791,76 @@ void posicionFichas(jugador* player, tablero* tab, jugadaPosible play[]){
   }
 }
 
-//CREAR JUGADORES
-void crearJugador(jugador player[], int tope) {
-  for(int i = 0; i < tope; i++){
-    printf("Ingrese los datos de los jugadores\n");
-    printf("Jugador %d\n", i + 1);
-    printf("Nombre: ");
-    scanf("%s", player[i].nombre);
-    asignarFicha(player);
-    player[i].turno = 0;
-    player[i].id = i;
-    printf("\n");
+void asignarFicha(jugador* player){//revisar que sea aleatorio realmente
+  double valor = (double)rand() / (double)RAND_MAX;
+  char resultFicha = (valor >= 0.5) ? 'X' : 'O';
+
+  if(resultFicha == 'X'){
+    player->ficha = 'X';
+  }else{
+    player->ficha = 'O';
   }
 }
 
+//CREAR JUGADORES
+void crearJugador(jugador player[]) {
+    printf("Ingrese los datos de los jugadores\n");
+    printf("Jugador 1\n");
+    printf("Nombre: ");
+    scanf("%s", player[0].nombre);
+    asignarFicha(&player[0]);
+    player[0].turno = 0;
+    player[0].turnoActual = false;
+    player[0].id = 0;
+    printf("%c\n", player[0].ficha);
+    printf("\n");
+
+    if(player[0].ficha == 'X'){
+      player[1].ficha = 'O';
+    }else if(player[0].ficha == 'O'){
+      player[1].ficha = 'X';
+    }
+    
+    printf("Jugador 2\n");
+    printf("Nombre: ");
+    scanf("%s", player[1].nombre);
+    player[1].turno = 0;
+    player[1].turnoActual = false;
+    player[1].id = 1;
+    printf("%c\n", player[1].ficha);
+    printf("\n");
+}
+
 jugador actualizarTurno(jugador player[]){
-  if(player[0].turno == 0 && player[1].turno == 0){//primer movimiento
+  if(player[0].turnoActual == false && player[1].turnoActual == false){//primer movimiento
     if(player[0].ficha == 'X'){
       player[0].turno++;
-      player[0].ultimoTurno = true;
+      player[0].turnoActual = true;
       return player[0];
-    }else{
+    }else if(player[1].ficha == 'X'){
       player[1].turno++;
-      player[1].ultimoTurno = true;
+      player[1].turnoActual = true;
       return player[1];
     }
   }else{//siguientes movimientos
-    if(player[0].ultimoTurno == true){
+    if(player[0].turnoActual == true){
       player[1].turno++; //el player 0 fue el ultimo
-      player[1].ultimoTurno = true;
-      player[0].ultimoTurno = false;
+      player[1].turnoActual = true;
+      player[0].turnoActual = false;
       return player[1];
-    }else{
+    }else if(player[1].turnoActual == true){
       player[0].turno++; //el player 1 fue el ultimo
-      player[0].ultimoTurno = true;
-      player[1].ultimoTurno = false;
+      player[0].turnoActual = true;
+      player[1].turnoActual = false;
       return player[0];
     }
   }
+
+  jugador jugadorVacio;
+  strcpy(jugadorVacio.nombre, "none");
+  jugadorVacio.id = -1;
+  jugadorVacio.ficha = 'W';
+  return jugadorVacio;
 }
 //codigo en el HP NO TE OLVIDES!!!------------------------------------------------------------------------------
 
@@ -847,44 +916,100 @@ void showInfo(jugador player[]){
   printf("\n\n");
 }
 
-//FUNCION PARA CONTAR FICHAS EN TABLERO??
-
-// MAIN ************************************************************************************************
+// MAIN 
 int main() {
+//------------------------------------------------------------------------------------------------------------------------- INICIO DEL JUEGO
   jugador jugadores[2];
   tablero tab;
   jugadaPosible play[64];
   coordenada test;
+  jugador player;
+  jugadaPosible jugada;
+  int hayJugadaPosible;
+  int noHayJugada = 0;
+  int turnosRestantes = 60;
 
-  iniciarPlays(play);
+  printf("\n");
+  printf("Bienvenido :)\n");
+  printf("para ingresar una jugada primero se ingresa el numero de fila (se presiona enter) y luego el de columna (y se presiona enter nuevamente)...\n");
+  printf("Gracias, gracias a ti... no hay de que :)\n\n");
 
   srand(time(NULL));
 
-  crearJugador(jugadores, 2);
+  crearJugador(jugadores);
 
-  iniciarTablero(&tab);
+  iniciarTablero(&tab); //INICIA EL TABLERO
 
-  jugador player = actualizarTurno(jugadores);
-  
-  //HACE UN BARRIDO DE TODAS LAS FICHAS DEL JUGADOR ACTUAL Y BUSCA SUS JUGADAS VALIDAS
-  posicionFichas(&player, &tab, play);
+//------------------------------------------------------------------------------------------------------------------------- EN JUEGO (LOOP)
+  for (int i = 0; i < 61; i++)
+  {
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    printf("Turnos restantes -->> %d\n", turnosRestantes);
+    //contar fichas
+    int negras = contarFichas(&tab, 'X');
+    int blancas = contarFichas(&tab, 'O');
+    mostrarConteoFichas(negras, blancas);
 
-  //MUESTRA LAS JUGADAS VALIDAS (FALTA RESETEARLAS PARA ORTO TURNO)
-  showPlays(play); 
+    iniciarPlays(play); //INICIA LAS JUGADAS VALIDAS EN "0"
+    
+    player = actualizarTurno(jugadores); //DA EL TURNO
+    
+    //HACE UN BARRIDO DE TODAS LAS FICHAS DEL JUGADOR ACTUAL Y BUSCA SUS JUGADAS VALIDAS
+    posicionFichas(&player, &tab, play);
 
-  renderTablero(&tab);
+    hayJugadaPosible = chckearSiHayJugadas(play);
+    //----------------------------------------------------------------------------------------------- NO HAY JUGADA POSIBLE!
+    if(hayJugadaPosible == 0 && noHayJugada < 2){
+      noHayJugada++;
+      continue;
+    }else if(hayJugadaPosible == 0 && noHayJugada >= 2){
+      printf("Se termino el juego cachito :(... \n");
+      //contar fichas
+      int negras = contarFichas(&tab, 'X');
+      int blancas = contarFichas(&tab, 'O');
 
-  jugadaPosible jugada = validarJugada(&player, play);
+      if(negras > blancas){
+        printf("Ganan las fichas negras.. con %d en el tablero contra %d fichas blancas\n", negras, blancas);
+      }else if(negras < blancas){
+        printf("Ganan las fichas blancas.. con %d en el tablero contra %d fichas negras\n", blancas, negras);
+      }else if(negras == blancas){
+        printf("Empate....  empate?? - negras: %d blancas: %d\n", negras, blancas);
+      }
+      break;
+    }
+    //----------------------------------------------------------------------------------------------- SI NO HAY JUGADA POSIBLE X2 SE FINIQUITIAMO ACA
 
-  // printf("Se ingreo una jugada para la ficha X en [%d - %d]\n", jugada.coord_fin[0].x, jugada.coord_fin[0].y);
+    //MUESTRA LAS JUGADAS VALIDAS
+    // showPlays(play); 
 
-  int result = ingresarJugada(&tab, &jugada, play);
-  // printf("%d", result);
+    //MUESTRA EL ESTADO ACTUAL DEL TABLERO
+    renderTablero(&tab);
+    showInfo(jugadores); //con la info de los jugadores
 
-  renderTablero(&tab);
-  
-  showInfo(jugadores);
+    //PIDE UNA COORDENADA DE JUGADA VALIDA Y LA GUARDA EN "JUGADA"
+    jugada = validarJugada(&player, play);
 
+    //SE INGRESA LA JUGADA Y SE ACTUALIZAN LAS FICHAS DEL TABLERO
+    ingresarJugada(&tab, &jugada, play, &player);
 
+    if(i == 60){
+      printf("Se terminaron los turnos.... :( saliendo...\n");
+      
+      int negras = contarFichas(&tab, 'X');
+      int blancas = contarFichas(&tab, 'O');
+
+      if(negras > blancas){
+        printf("Ganan las fichas negras.. con %d en el tablero contra %d fichas blancas\n", negras, blancas);
+      }else if(negras < blancas){
+        printf("Ganan las fichas blancas.. con %d en el tablero contra %d fichas negras\n", blancas, negras);
+      }else if(negras == blancas){
+        printf("Empate....  empate?? - negras: %d blancas: %d\n", negras, blancas);
+      }
+      break;
+    }
+
+    turnosRestantes--;
+  }
+//------------------------------------------------------------------------------------------------------------------------- FIN EN JUEGO (LOOP)
   printf("fin de ejecucion");
 } 
