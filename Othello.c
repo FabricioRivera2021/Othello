@@ -189,48 +189,70 @@ void savePlays(jugadaPosible plays[], int index, int x, int y, int fin_x, int fi
   }
 }
 
-void obtenerIdDeCasillasAfectadas(int* count2, int resultado[], tablero* tab, char* direccion1, char* direccion2, char* direccion3, int origen_x,int origen_y,int fin_x,int fin_y){
+//obtener todos los origenes de la jugada que se ingreso - HASTA 3 MAXIMO
+void getAllOrigins(jugadaPosible plays[], jugadaPosible* play, jugadaPosible jugadaMultiple[]) {
+  /*La idea es obtener TODOS los origenes de una jugada posible*/
+  int count = 0;
+  for (int i = 0; i < 64; i++){
+    if(play->coord_fin[0].x == plays[i].coord_fin[0].x && play->coord_fin[0].y == plays[i].coord_fin[0].y){
+      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
+      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
+      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[0].x;
+      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[0].y;
+      jugadaMultiple[count].isPlay = true;
+      strcpy(jugadaMultiple[0].play_direccion[0].direccion, plays[i].play_direccion[0].direccion); 
+      count++;
+      continue;
+    }
+    if(play->coord_fin[0].x == plays[i].coord_fin[1].x && play->coord_fin[0].y == plays[i].coord_fin[1].y){
+      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
+      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
+      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[1].x;
+      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[1].y;
+      jugadaMultiple[count].isPlay = true;
+      strcpy(jugadaMultiple[1].play_direccion[1].direccion, plays[i].play_direccion[1].direccion);
+      count++;
+      continue;
+    }
+    if(play->coord_fin[0].x == plays[i].coord_fin[2].x && play->coord_fin[0].y == plays[i].coord_fin[2].y){
+      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
+      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
+      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[2].x;
+      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[2].y;
+      jugadaMultiple[count].isPlay = true;
+      strcpy(jugadaMultiple[0].play_direccion[2].direccion, plays[i].play_direccion[2].direccion);
+      count++;
+      continue;
+    }
+  }
+}
+
+void obtenerIdDeCasillasAfectadas(int* count2, int resultado[], tablero* tab, char* direccion, int origen_x,int origen_y,int fin_x,int fin_y){
 
   *count2 = 0;
   int x, y;
 
-  if (strcmp(direccion1, "diag_sup_izq") == 0
-      ||strcmp(direccion2, "diag_sup_izq") == 0
-      ||strcmp(direccion3, "diag_sup_izq") == 0) {
+  if (strcmp(direccion, "diag_sup_izq") == 0) {
       x = -1; y = -1;
-  } else if (strcmp(direccion1, "vertical+") == 0
-              ||strcmp(direccion2, "vertical+") == 0
-              ||strcmp(direccion3, "vertical+") == 0) {
+  } else if (strcmp(direccion, "vertical+") == 0) {
       x = -1; y = 0;
-  } else if (strcmp(direccion1, "diag_sup_der") == 0
-              ||strcmp(direccion2, "diag_sup_der") == 0
-              ||strcmp(direccion3, "diag_sup_der") == 0) {
+  } else if (strcmp(direccion, "diag_sup_der") == 0) {
       x = -1; y = 1;
-  } else if (strcmp(direccion1, "horizontal-") == 0
-              ||strcmp(direccion2, "horizontal-") == 0
-              ||strcmp(direccion3, "horizontal-") == 0) {
+  } else if (strcmp(direccion, "horizontal-") == 0) {
       x = 0; y = -1;
-  } else if (strcmp(direccion1, "horizontal+") == 0
-              ||strcmp(direccion2, "horizontal+") == 0
-              ||strcmp(direccion3, "horizontal+") == 0) {
+  } else if (strcmp(direccion, "horizontal+") == 0) {
       x = 0; y = 1;
-  } else if (strcmp(direccion1, "diag_inf_izq") == 0
-              ||strcmp(direccion2, "diag_inf_izq") == 0
-              ||strcmp(direccion3, "diag_inf_izq") == 0) {
+  } else if (strcmp(direccion, "diag_inf_izq") == 0) {
       x = 1; y = -1;
-  } else if (strcmp(direccion1, "vertical-") == 0
-              ||strcmp(direccion2, "vertical-") == 0
-              ||strcmp(direccion3, "vertical-") == 0) {
+  } else if (strcmp(direccion, "vertical-") == 0) {
       x = 1; y = 0;
-  } else if (strcmp(direccion1, "diag_inf_der") == 0
-              ||strcmp(direccion2, "diag_inf_der") == 0
-              ||strcmp(direccion3, "diag_inf_der") == 0) {
+  } else if (strcmp(direccion, "diag_inf_der") == 0) {
       x = 1; y = 1;
   }
 
   //mientras la coordenada de origen no sea la coordenada de final hacer el coso coso de las x e y
   while (origen_x != fin_x || origen_y != fin_y){
-   printf("1 origen.> %d - %d final-> %d - %d\n", origen_x, origen_y, fin_x, fin_y);
+  //  printf("1 origen.> %d - %d final-> %d - %d\n", origen_x, origen_y, fin_x, fin_y);
    resultado[*count2] = getIdCasilla(tab, origen_x, origen_y);
    origen_x += x;
    origen_y += y;
@@ -558,7 +580,27 @@ jugadaPosible validarJugada(jugador player[], jugadaPosible jugadasPosibles[]) {
 
 //INGRESAR UNA JUGADA, Y CAMBIAR LAS FICHAS AFECTADAS EN DICHA JUGADA return 1 si OK | return 0 si MAL
 int ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[]) {
-  coordenada inicio[3];
+
+  int count = 0;
+  jugadaPosible jugadaMultiple[3];
+
+  for (int i = 0; i < 3; i++){//inicializar jugadaMultiple
+    jugadaMultiple[i].coord_inicio.x = 0;
+    jugadaMultiple[i].coord_inicio.y = 0;
+    jugadaMultiple[i].coord_fin[0].x = 0;
+    jugadaMultiple[i].coord_fin[0].y = 0;
+    jugadaMultiple[i].coord_fin[1].x = 0;
+    jugadaMultiple[i].coord_fin[1].y = 0;
+    jugadaMultiple[i].coord_fin[2].x = 0;
+    jugadaMultiple[i].coord_fin[2].y = 0;
+    jugadaMultiple[i].isPlay = false;
+    strcpy(jugadaMultiple[i].play_direccion[0].direccion, "none");
+    strcpy(jugadaMultiple[i].play_direccion[1].direccion, "none");
+    strcpy(jugadaMultiple[i].play_direccion[2].direccion, "none");
+  }
+  
+
+  // coordenada inicio[3];
   //HARDCODEADO POR AHORA
   char ficha_a_insertar = 'X';
   int id[3] = {0};
@@ -566,90 +608,76 @@ int ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[]) {
 
   //conseguir coordenadas de fin de la jugada del usuario
   //AL SER UNA COORDENADA LA QUE INGRESA EN USUARIO VIENE SIEMPRE EN EL INDEX 0 -> jugada->coord_fin[0]
-  int count = 0;
-  for (int j = 0; j < 3 ; j++){
-    for (int i = 0; i < 64; i++){
-      if(jugada->coord_fin[0].x == plays[i].coord_fin[0].x && jugada->coord_fin[0].y == plays[i].coord_fin[0].y){
-        //get plays->coord_inicio.x and plays->coord_inicio.y
-        id[count] = getIdCasilla(tab, plays[i].coord_inicio.x, plays[i].coord_inicio.y);
-        inicio[count].x = plays[i].coord_inicio.x;
-        inicio[count].y = plays[i].coord_inicio.y;
-        count++;
-        break;
-      }else if(jugada->coord_fin[0].x == plays[i].coord_fin[1].x && jugada->coord_fin[0].y == plays[i].coord_fin[1].y){
-        id[count] = getIdCasilla(tab, plays[i].coord_inicio.x, plays[i].coord_inicio.y);
-        inicio[count].x = plays[i].coord_inicio.x;
-        inicio[count].y = plays[i].coord_inicio.y;
-        count++;
-        break;
-      }else if(jugada->coord_fin[0].x == plays[i].coord_fin[2].x && jugada->coord_fin[0].y == plays[i].coord_fin[2].y){
-        id[count] = getIdCasilla(tab, plays[i].coord_inicio.x, plays[i].coord_inicio.y);
-        inicio[count].x = plays[i].coord_inicio.x;
-        inicio[count].y = plays[i].coord_inicio.y;
-        count++;
-        break;
-      }
+  // for (int i = 0; i < count; i++){//count es la cantidad de direcciones que afecta la jugada
+  //   printf("LINEA 591 id de casilla %d\n", id[i]);
+  //   printf("LINEA 592 ORIGEN: [%d - %d]\nDireccion 1|%s| 2|%s| 3|%s|\n", 
+  //     inicio[i].x, 
+  //     inicio[i].y, 
+  //     jugada->play_direccion[0].direccion, 
+  //     jugada->play_direccion[1].direccion,
+  //     jugada->play_direccion[2].direccion);
+  // }
+
+  getAllOrigins(plays, jugada, jugadaMultiple); 
+
+  for (int i = 0; i < 3; i++){
+    if(jugadaMultiple[i].isPlay){
+      count++;
     }
   }
   
-  for (int i = 0; i < count; i++){//count es la cantidad de direcciones que afecta la jugada
-    printf("LINEA 591 id de casilla %d\n", id[i]);
-    printf("LINEA 592 ORIGEN: [%d - %d]\nDireccion 1|%s| 2|%s| 3|%s|\n", 
-      inicio[i].x, 
-      inicio[i].y, 
-      jugada->play_direccion[0].direccion, 
-      jugada->play_direccion[1].direccion,
-      jugada->play_direccion[2].direccion);
-  }
+  //----> queda guarrdado en jugadaMultiple
+  // printf("coordenadas de origen LINEA 642\n [%d - %d] -> %s [%d - %d] -> %s\n", 
+  //   jugadaMultiple[0].coord_inicio.x,
+  //   jugadaMultiple[0].coord_inicio.y,
+  //   jugadaMultiple[0].play_direccion[0].direccion,
+  //   jugadaMultiple[1].coord_inicio.x,
+  //   jugadaMultiple[1].coord_inicio.y,
+  //   jugadaMultiple[1].play_direccion[1].direccion,
+  //   jugadaMultiple[2].coord_inicio.x,
+  //   jugadaMultiple[2].coord_inicio.y
+  // );
 
   //1 direccion | if count == 0
   int casillasID[8] = { 0 };
   int count2 = 0; //dependiendo de la cantidad de direcciones que hallan
-  int origen_x = jugada->coord_inicio.x;
-  int origen_y = jugada->coord_inicio.y;
 
   if(count == 1){
     obtenerIdDeCasillasAfectadas(
       &count2,
       casillasID,
       tab, 
-      jugada->play_direccion[0].direccion,
-      jugada->play_direccion[1].direccion,
-      jugada->play_direccion[2].direccion,
-      origen_x,
-      origen_y,
-      jugada->coord_fin[0].x,
-      jugada->coord_fin[0].y
+      jugadaMultiple[0].play_direccion[0].direccion,
+      jugadaMultiple[0].coord_inicio.x,
+      jugadaMultiple[0].coord_inicio.y,
+      jugadaMultiple[0].coord_fin[0].x,
+      jugadaMultiple[0].coord_fin[0].y
     );
 
     for (int i = 0; i < count2; i++){
       updateFicha(tab, casillasID[i]); //actualizar el tablero
-      printf("%d\n", casillasID[i]);
     }
   }
 
   //2 direcciones | if count == 1
-  /*if(count == 2){
+  if(count == 2){
     for (int i = 0; i < 2; i++){
       obtenerIdDeCasillasAfectadas(
         &count2,
         casillasID,
-        tab,
-        jugada->play_direccion[0].direccion,
-        jugada->play_direccion[1].direccion,
-        jugada->play_direccion[2].direccion,
-        inicio[i].x,
-        inicio[i].y,
-        jugada->coord_fin[0].x,
-        jugada->coord_fin[0].y
+        tab, 
+        jugadaMultiple[i].play_direccion[i].direccion,
+        jugadaMultiple[i].coord_inicio.x,
+        jugadaMultiple[i].coord_inicio.y,
+        jugadaMultiple[i].coord_fin[0].x,
+        jugadaMultiple[i].coord_fin[0].y
       );
 
       for (int i = 0; i < count2; i++){
         updateFicha(tab, casillasID[i]); //actualizar el tablero
-        printf("%d\n", casillasID[i]);
       }
     }
-  }*/
+  }
 
 
   
@@ -860,153 +888,3 @@ int main() {
 
   printf("fin de ejecucion");
 } 
-
-/* FUNCION EN PROGRESO
-int obtenerIdDeCasillasAfectadas(direccion1, direccion2, direccion3, direccionObjetivo){
-	int result[8];
-	int count = 0;
-	int x, y;
-	direccionObjetivo = "diag_sup_izq" -> x = -1 | y = -1 
-	direccionObjetivo = "diag_sup_izq" -> x = -1 | y = 0 
-	direccionObjetivo = "diag_sup_izq" -> x = -1 | y = +1 
-	direccionObjetivo = "diag_sup_izq" -> x = 0 | y = -1 
-	direccionObjetivo = "diag_sup_izq" -> x = 0 | y = +1 
-	direccionObjetivo = "diag_sup_izq" -> x = +1 | y = -1 
-	direccionObjetivo = "diag_sup_izq" -> x = +1 | y = 0
-	direccionObjetivo = "diag_sup_izq" -> x = +1 | y = +1
-
-   if(strcmp(direccion1, direccionObjetivo) == 0
-      ||strcmp(direccion2, direccionObjetivo)  == 0
-      ||strcmp(direccion3, direccionObjetivo)  == 0){
-      //mientras la coordenada de origen no sea la coordenada de final hacer el coso coso de las x e y
-      while (origen_x != jugada->coord_fin[0].x && origen_y != jugada->coord_fin[0].y){
-        printf("1 origen.> %d - %d final-> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
-        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-        origen_x += x;
-        origen_y += y;
-        count++;
-      }
-      casillasID[count] = getIdCasilla(tab, origen_x, origen_y);
-      origen_x += x;
-      origen_y += y;
-      count++;
-}
-*/
-
-
-/*
-    if(strcmp(jugada->play_direccion[0].direccion, "diag_sup_izq") == 0
-      ||strcmp(jugada->play_direccion[1].direccion, "diag_sup_der")  == 0
-      ||strcmp(jugada->play_direccion[2].direccion, "diag_sup_der")  == 0){
-      //mientras la coordenada de origen no sea la coordenada de final hacer el coso coso de las x e y
-      //-1 -1
-      while (origen_x != jugada->coord_fin[0].x && origen_y != jugada->coord_fin[0].y){
-        printf("1 origen.> %d - %d final-> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
-        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-        origen_x--;
-        origen_y--;
-        count2++;
-      }
-      casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-      origen_x--;
-      origen_y--;
-      count2++;
-    }else if(strcmp(jugada->play_direccion[0].direccion, "vertical+")  == 0
-            ||strcmp(jugada->play_direccion[1].direccion, "diag_sup_der")  == 0
-            ||strcmp(jugada->play_direccion[2].direccion, "diag_sup_der")  == 0){
-      //-1 0
-      while (origen_x != jugada->coord_fin[0].x && origen_y != jugada->coord_fin[0].y){
-        printf("2 origen.> %d - %d final-> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
-        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-        origen_x--;
-        count2++;
-      }
-      casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-      origen_x--;
-      count2++;
-    }else if(strcmp(jugada->play_direccion[0].direccion, "diag_sup_der")  == 0
-            ||strcmp(jugada->play_direccion[1].direccion, "diag_sup_der")  == 0
-            ||strcmp(jugada->play_direccion[2].direccion, "diag_sup_der")  == 0){
-      //-1 +1
-      while (origen_x != jugada->coord_fin[0].x && origen_y != jugada->coord_fin[0].y){
-        printf("3 origen.> %d - %d final-> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
-        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-        origen_x--;
-        origen_y++;
-        count2++;
-      }
-      casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-      origen_x--;
-      origen_y++;
-      count2++;
-    }else if(strcmp(jugada->play_direccion[0].direccion, "horizontal-")  == 0
-            ||strcmp(jugada->play_direccion[1].direccion, "horizontal-")  == 0
-            ||strcmp(jugada->play_direccion[2].direccion, "horizontal-")  == 0){
-      //0 -1
-      while (origen_x != jugada->coord_fin[0].x || origen_y != jugada->coord_fin[0].y){
-        printf("4 origen.> %d - %d final-> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
-        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-        origen_y--;
-        count2++;
-      }
-      casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-      origen_y--;
-      count2++;
-    }else if(strcmp(jugada->play_direccion[0].direccion, "horizontal+")  == 0
-            ||strcmp(jugada->play_direccion[1].direccion, "horizontal+")  == 0
-            ||strcmp(jugada->play_direccion[2].direccion, "horizontal+")  == 0){
-      //0 +1
-      while (origen_x != jugada->coord_fin[0].x || origen_y != jugada->coord_fin[0].y){
-        printf("5 origen.> %d - %d final-> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
-        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-        origen_y++;
-        count2++;
-      }
-      casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-      origen_y++;
-      count2++;
-    }else if(strcmp(jugada->play_direccion[0].direccion, "diag_inf_izq") == 0
-            ||strcmp(jugada->play_direccion[1].direccion, "diag_inf_izq") == 0
-            ||strcmp(jugada->play_direccion[2].direccion, "diag_inf_izq") == 0){
-      //+1 -1
-      while (origen_x != jugada->coord_fin[0].x && origen_y != jugada->coord_fin[0].y){
-        printf("6 origen.> %d - %d final-> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
-        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-        origen_x++;
-        origen_y--;
-        count2++;
-      }
-      casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-      origen_x++;
-      origen_y--;
-      count2++;
-    }else if(strcmp(jugada->play_direccion[0].direccion, "vertical-") == 0
-            ||strcmp(jugada->play_direccion[1].direccion, "vertical-") == 0
-            ||strcmp(jugada->play_direccion[2].direccion, "vertical-") == 0){
-      //+1 0
-      while (origen_x != jugada->coord_fin[0].x || origen_y != jugada->coord_fin[0].y){
-        printf("7 origen.> %d - %d final-> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
-        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-        origen_x++;
-        count2++;
-      }
-      casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-      origen_x++;
-      count2++;
-    }else if(strcmp(jugada->play_direccion[0].direccion, "diag_inf_der")  == 0
-            ||strcmp(jugada->play_direccion[1].direccion, "diag_inf_der")  == 0
-            ||strcmp(jugada->play_direccion[2].direccion, "diag_inf_der")  == 0){
-      //+1 +1
-      while (origen_x != jugada->coord_fin[0].x && origen_y != jugada->coord_fin[0].y){
-        printf("8 origen.> %d - %d final-> %d - %d\n", origen_x, origen_y, jugada->coord_fin[0].x, jugada->coord_fin[0].y);
-        casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-        origen_x++;
-        origen_y++;
-        count2++;
-      }
-      casillasID[count2] = getIdCasilla(tab, origen_x, origen_y);
-      origen_x++;
-      origen_y++;
-      count2++;
-    }
-    */
