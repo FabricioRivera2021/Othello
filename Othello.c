@@ -40,6 +40,23 @@ typedef struct {
   bool turnoActual; //para saber quien tuvo el ultimo turno
 } jugador;
 
+/*POSIBLE REFACTORIZACION DE LA BUSQUEDA DE JUGADAS POSIBLES EN -VALIDARJUGADA-
+ jugadaPosible buscarJugadaPosible("array de jugadas posibles", int I, int J){
+ jugadaPosible jugadaVacia;
+ jugadaVacia.isPlay = false;
+
+ if(jugadasPosibles[I].coord_fin[J].x == x && jugadasPosibles[I].coord_fin[J].y == y && jugadasPosibles[i].isPlay == true) {
+  play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
+  play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
+  play.coord_fin[0].x = jugadasPosibles[i].coord_fin[J].x;
+  play.coord_fin[0].y = jugadasPosibles[i].coord_fin[J].y;
+  strcpy(play.play_direccion[0].direccion, jugadasPosibles[I].play_direccion[J].direccion);
+  Si lo encontro RETURN play -> encontrado = true;
+ }
+
+ si no lo encontro RETURN jugadaVacia;
+}*/
+
 
 void mostrarConteoFichas(int negras, int blancas){
   printf("Blancas: %d\n", blancas);
