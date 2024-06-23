@@ -91,44 +91,14 @@ void updateFicha(tablero* tab, int id, char ficha) {
   tab->jugada[id].ficha = ficha;
 }
 
-//si hay mas de una direccion, obtener las coordenadas de esos origenes
-// coordenada getOrigenExtra(coordenada* cord, jugadaPosible plays[]) {
-//   for (int i = 0; i < 64; i++){
-//     play
-//   }
-  
-// }
-
 //obtener la direccion para una coordenada de jugada en concreto
 play_direccions getDireccion (jugadaPosible* play, jugadaPosible plays[]) {
+
   play_direccions direcciones[3];
-
-
-
   return *direcciones;
+
 }
 
-//devuelve la coordenada a partir de una id de casilla
-/*coordenada getCoordenada (tablero* tab, int id) {
-  coordenada coord;
-
-  coord.ficha = '!';
-  coord.empty = false;
-
-  int ident = 0;
-  for (int j = 1; j <= 8; j++) {
-    for (int k = 1; k <= 8; k++) {
-      if(ident == id){
-        coord.x = j;
-        coord.y = k;
-        return coord;
-      }
-      ident++;
-    }
-  }
-}*/
-
-// getIdCasilla(tab, plays[i].coord_inicio.x, plays[i].coord_inicio.y);
 //devuelve el id de la casilla para una coordenada en concreto
 int getIdCasilla (tablero* tab, int x, int y) {
   int id = 0;
@@ -142,6 +112,7 @@ int getIdCasilla (tablero* tab, int x, int y) {
   }
 }
 
+//iniciar el array jugadasPosibles o "limpiarlo"
 void iniciarPlays (jugadaPosible plays[]){
   for(int i = 0; i < 64; i++){
       plays[i].coord_inicio.x = 0;
@@ -152,13 +123,29 @@ void iniciarPlays (jugadaPosible plays[]){
       plays[i].coord_fin[1].y = 0;
       plays[i].coord_fin[2].x = 0;
       plays[i].coord_fin[2].y = 0;
+      plays[i].coord_fin[3].x = 0;
+      plays[i].coord_fin[3].y = 0;
+      plays[i].coord_fin[4].x = 0;
+      plays[i].coord_fin[4].y = 0;
+      plays[i].coord_fin[5].x = 0;
+      plays[i].coord_fin[5].y = 0;
+      plays[i].coord_fin[6].x = 0;
+      plays[i].coord_fin[6].y = 0;
+      plays[i].coord_fin[7].x = 0;
+      plays[i].coord_fin[7].y = 0;
       strcpy(plays[i].play_direccion[0].direccion, "none");
       strcpy(plays[i].play_direccion[1].direccion, "none");
       strcpy(plays[i].play_direccion[2].direccion, "none");
+      strcpy(plays[i].play_direccion[3].direccion, "none");
+      strcpy(plays[i].play_direccion[4].direccion, "none");
+      strcpy(plays[i].play_direccion[5].direccion, "none");
+      strcpy(plays[i].play_direccion[6].direccion, "none");
+      strcpy(plays[i].play_direccion[7].direccion, "none");
       plays[i].isPlay = false;
   }
 }
 
+//mostrar las jugadas que sean validas para la ficha que este actualmente en juego
 void showPlays (jugadaPosible plays[]){
   for(int i = 0; i < 64; i++){
     // si tiene 8 jugadas
@@ -331,6 +318,7 @@ void showPlays (jugadaPosible plays[]){
   }
 }
 
+//encargado de insertar las posibles jugadas en el array de jugadas posibles
 void savePlays(jugadaPosible plays[], int index, int x, int y, int fin_x, int fin_y, char direccion[]){
   for (int i = 0; i < 64; i++){
     //quiere decir que es un espacio vacio para guardar
@@ -341,7 +329,6 @@ void savePlays(jugadaPosible plays[], int index, int x, int y, int fin_x, int fi
       plays[i].coord_fin[0].y = fin_y;
       strcpy(plays[i].play_direccion[0].direccion, direccion);
       plays[i].isPlay = 1;
-      // strcpy(plays[i].direccion, direccion);
       break;
     }
     //quiere decir que para ese valor de origen existen mas direcciones de jugadas posibles
@@ -386,9 +373,11 @@ void savePlays(jugadaPosible plays[], int index, int x, int y, int fin_x, int fi
   }
 }
 
-//obtener todos los origenes de la jugada que se ingreso - HASTA 3 MAXIMO
+/*obtener todos los origenes de la jugada que se ingreso - HASTA 3 MAXIMO
+  - ya que una una posicion de origen puede desenvocar en mas de una "linea" aqui se buscan esos origenes, que dada una posicion valida
+    para hacer una jugada crearian varias lineas de "accion", hasta un maximo de 3 lineas afectadas
+*/
 void getAllOrigins(jugadaPosible plays[], jugadaPosible* play, jugadaPosible jugadaMultiple[]) {
-  /*La idea es obtener TODOS los origenes de una jugada posible*/
   int count = 0;
   for (int i = 0; i < 64; i++){
     if(play->coord_fin[0].x == plays[i].coord_fin[0].x && play->coord_fin[0].y == plays[i].coord_fin[0].y){
@@ -474,6 +463,10 @@ void getAllOrigins(jugadaPosible plays[], jugadaPosible* play, jugadaPosible jug
   }
 }
 
+/*Para realizar el calculo de "diferencia" entre una casilla de "jugada" y una casilla de "origen" se necesita saber la direccion de la jugada
+que se ingreso, luego se realiza el calculo en base a las casillas.
+basicamente mientras las coordenadas de la casilla de "origen" sean distintas de la casilla de "jugada" se realiza el calculo que corresponda
+las coordenadas que queden entre ambas coordenadas se guardan en un arreglo de enteros y luego seran convertidas al tipo de ficha que corresponda*/
 void obtenerIdDeCasillasAfectadas(int* count2, int resultado[], tablero* tab, char* direccion, int origen_x,int origen_y,int fin_x,int fin_y){
   *count2 = 0;
   int x, y;
@@ -679,6 +672,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
 }
 
 //ECONTRAR CASILLAS ADYACENTES
+//se buscan casilla adyacentes para una ficha en concreto
 void findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosible plays[]){
   coordenada result;
   char ficha_oponente;
@@ -738,7 +732,7 @@ void findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosible plays[]
     j++;
   }
 
-  /*
+  /* referencia
   // direccion: 
     1DIAG-SUP-IZQ | 2ARRIBA  | 3DIAG-SUP-DER 
     [-1 -1 ]      | [-1 0]   | [-1 +1]
@@ -752,7 +746,7 @@ void findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosible plays[]
 }
 
 //VALIDAR QUE LA JUGADA INGRESADA PERTENEZCA A LAS JUGADAS VALIDAS
-//RETORNA EL VALOR DE LA COORDENADA DE ORIGEN
+//RETORNA la jugada que el usuario ingrese, si es valida
 jugadaPosible validarJugada(jugador* player, jugadaPosible jugadasPosibles[]) {
   jugadaPosible play;
   int x, y;
@@ -762,7 +756,6 @@ jugadaPosible validarJugada(jugador* player, jugadaPosible jugadasPosibles[]) {
 
   //si las coordenadas que se ingresan estan en el array de jugadasPosibles, que seria el valor de la casilla vacia, todo OK
   //sino jugada invalida y que vuela a intentarlo
-
   int topeDeIntentos = 5;
   int i;
   while(!encontrado && topeDeIntentos > 0){
@@ -892,13 +885,10 @@ void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], 
     strcpy(jugadaMultiple[i].play_direccion[2].direccion, "none");
   }
   
-
-  // coordenada inicio[3];
-  //HARDCODEADO POR AHORA
   int id[3] = {0};
   // SI las coordenadas de final tienen mas de un origen hay que afectar mas de una direccion, sino... 1 sola direccion
 
-  //conseguir coordenadas de fin de la jugada del usuario
+  //SOLO PARA DEBUGEAR - DEJO POR LAS DUDAS
   //AL SER UNA COORDENADA LA QUE INGRESA EN USUARIO VIENE SIEMPRE EN EL INDEX 0 -> jugada->coord_fin[0]
   // for (int i = 0; i < count; i++){//count es la cantidad de direcciones que afecta la jugada
   //   printf("LINEA 591 id de casilla %d\n", id[i]);
@@ -910,25 +900,27 @@ void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], 
   //     jugada->play_direccion[2].direccion);
   // }
 
+  //en jugada multiple quedan guardadas las jugadas que afecten mas de una LINEA al mismo tiempo, lo que llamare "jugada multiple"
   getAllOrigins(plays, jugada, jugadaMultiple); 
 
+  //checkeo cuantas jugadas multiples hay, 1, 2 o 3
   for (int i = 0; i < 3; i++){
     if(jugadaMultiple[i].isPlay){
       count++;
     }
   }
   
-  //----> queda guarrdado en jugadaMultiple
-  printf("coordenadas de origen LINEA 660\n [%d - %d] -> %s [%d - %d] -> %s\n", 
-    jugadaMultiple[0].coord_inicio.x,
-    jugadaMultiple[0].coord_inicio.y,
-    jugadaMultiple[0].play_direccion[0].direccion,
-    jugadaMultiple[1].coord_inicio.x,
-    jugadaMultiple[1].coord_inicio.y,
-    jugadaMultiple[1].play_direccion[1].direccion,
-    jugadaMultiple[2].coord_inicio.x,
-    jugadaMultiple[2].coord_inicio.y
-  );
+  //----> queda guarrdado en jugadaMultiple, printf PARA DEBUGEAR
+  // printf("coordenadas de origen LINEA 660\n [%d - %d] -> %s [%d - %d] -> %s\n", 
+  //   jugadaMultiple[0].coord_inicio.x,
+  //   jugadaMultiple[0].coord_inicio.y,
+  //   jugadaMultiple[0].play_direccion[0].direccion,
+  //   jugadaMultiple[1].coord_inicio.x,
+  //   jugadaMultiple[1].coord_inicio.y,
+  //   jugadaMultiple[1].play_direccion[1].direccion,
+  //   jugadaMultiple[2].coord_inicio.x,
+  //   jugadaMultiple[2].coord_inicio.y
+  // );
 
   //1 direccion | if count == 0
   int casillasID[8] = { 0 };
@@ -1015,12 +1007,6 @@ void iniciarTablero(tablero* tab){
   }
   
   //colocar fichas en la posicion inicial
-  
-  // tab->jugada[26].x = 4;
-  // tab->jugada[26].y = 3;
-  // tab->jugada[26].ficha = 'X';
-  // tab->jugada[26].empty = false;
-  
   tab->jugada[27].x = 4;
   tab->jugada[27].y = 4;
   tab->jugada[27].ficha = 'O';
@@ -1124,7 +1110,6 @@ jugador actualizarTurno(jugador player[]){
   jugadorVacio.ficha = 'W';
   return jugadorVacio;
 }
-//codigo en el HP NO TE OLVIDES!!!------------------------------------------------------------------------------
 
 // RENDERIZAR EL TABLERO Y LA POSICION DE LAS FICHAS
 void renderTablero(tablero* tab){
