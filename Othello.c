@@ -22,8 +22,8 @@ typedef struct {
 
 typedef struct {
   coordenada coord_inicio;
-  coordenada coord_fin[3];//a lo sumo 3 coordenadas al mismo tiempo
-  play_direccions play_direccion[3];
+  coordenada coord_fin[8];//a lo sumo 3 coordenadas al mismo tiempo
+  play_direccions play_direccion[8];
   bool isPlay;
 } jugadaPosible;
 
@@ -144,8 +144,135 @@ void iniciarPlays (jugadaPosible plays[]){
 
 void showPlays (jugadaPosible plays[]){
   for(int i = 0; i < 64; i++){
+    // si tiene 8 jugadas
+    if(plays[i].isPlay == 1 && plays[i].coord_fin[0].x != 0 && plays[i].coord_fin[1].x != 0 && plays[i].coord_fin[2].x != 0 && plays[i].coord_fin[3].x != 0 && plays[i].coord_fin[4].x != 0 && plays[i].coord_fin[5].x != 0 
+      && plays[i].coord_fin[6].x != 0 && plays[i].coord_fin[7].x != 0){
+      printf("\n-jugada valida en--\n [%d - %d]  --\njugada1|%d - %d| direccion: %s\njugada2|%d - %d| direccion: %s\njugada3|%d - %d| direccion: %s\njugada4|%d - %d| direccion: %s\njugada5|%d - %d| direccion: %s\njugada6|%d - %d| direccion: %s\njugada7|%d - %d| direccion: %s\njugada8|%d - %d| direccion: %s\n", 
+        // i,
+        plays[i].coord_inicio.x,
+        plays[i].coord_inicio.y,
+        plays[i].coord_fin[0].x,
+        plays[i].coord_fin[0].y,
+        plays[i].play_direccion[0].direccion,
+        plays[i].coord_fin[1].x,
+        plays[i].coord_fin[1].y,
+        plays[i].play_direccion[1].direccion,
+        plays[i].coord_fin[2].x,
+        plays[i].coord_fin[2].y,
+        plays[i].play_direccion[2].direccion,
+        plays[i].coord_fin[3].x,
+        plays[i].coord_fin[3].y,
+        plays[i].play_direccion[3].direccion,
+        plays[i].coord_fin[4].x,
+        plays[i].coord_fin[4].y,
+        plays[i].play_direccion[4].direccion,
+        plays[i].coord_fin[5].x,
+        plays[i].coord_fin[5].y,
+        plays[i].play_direccion[5].direccion,
+        plays[i].coord_fin[6].x,
+        plays[i].coord_fin[6].y,
+        plays[i].play_direccion[6].direccion,
+        plays[i].coord_fin[7].x,
+        plays[i].coord_fin[7].y,
+        plays[i].play_direccion[7].direccion
+      );
+    // si tiene 7 jugadas
+    }else if(plays[i].isPlay == 1 && plays[i].coord_fin[0].x != 0 && plays[i].coord_fin[1].x != 0 && plays[i].coord_fin[2].x != 0 && plays[i].coord_fin[3].x != 0 && plays[i].coord_fin[4].x != 0 && plays[i].coord_fin[5].x != 0
+      && plays[i].coord_fin[6].x != 0){
+      printf("\n-jugada valida en--\n [%d - %d]  --\njugada1|%d - %d| direccion: %s\njugada2|%d - %d| direccion: %s\njugada3|%d - %d| direccion: %s\njugada4|%d - %d| direccion: %s\njugada5|%d - %d| direccion: %s\njugada6|%d - %d| direccion: %s\njugada7|%d - %d| direccion: %s\n", 
+        // i,
+        plays[i].coord_inicio.x,
+        plays[i].coord_inicio.y,
+        plays[i].coord_fin[0].x,
+        plays[i].coord_fin[0].y,
+        plays[i].play_direccion[0].direccion,
+        plays[i].coord_fin[1].x,
+        plays[i].coord_fin[1].y,
+        plays[i].play_direccion[1].direccion,
+        plays[i].coord_fin[2].x,
+        plays[i].coord_fin[2].y,
+        plays[i].play_direccion[2].direccion,
+        plays[i].coord_fin[3].x,
+        plays[i].coord_fin[3].y,
+        plays[i].play_direccion[3].direccion,
+        plays[i].coord_fin[4].x,
+        plays[i].coord_fin[4].y,
+        plays[i].play_direccion[4].direccion,
+        plays[i].coord_fin[5].x,
+        plays[i].coord_fin[5].y,
+        plays[i].play_direccion[5].direccion,
+        plays[i].coord_fin[6].x,
+        plays[i].coord_fin[6].y,
+        plays[i].play_direccion[6].direccion
+      );
+    // si tiene 6 jugadas
+    }else if(plays[i].isPlay == 1 && plays[i].coord_fin[0].x != 0 && plays[i].coord_fin[1].x != 0 && plays[i].coord_fin[2].x != 0 && plays[i].coord_fin[3].x != 0 && plays[i].coord_fin[4].x != 0 && plays[i].coord_fin[5].x != 0){
+      printf("\n-jugada valida en--\n [%d - %d]  --\njugada1|%d - %d| direccion: %s\njugada2|%d - %d| direccion: %s\njugada3|%d - %d| direccion: %s\njugada4|%d - %d| direccion: %s\njugada5|%d - %d| direccion: %s\njugada6|%d - %d| direccion: %s\n", 
+        // i,
+        plays[i].coord_inicio.x,
+        plays[i].coord_inicio.y,
+        plays[i].coord_fin[0].x,
+        plays[i].coord_fin[0].y,
+        plays[i].play_direccion[0].direccion,
+        plays[i].coord_fin[1].x,
+        plays[i].coord_fin[1].y,
+        plays[i].play_direccion[1].direccion,
+        plays[i].coord_fin[2].x,
+        plays[i].coord_fin[2].y,
+        plays[i].play_direccion[2].direccion,
+        plays[i].coord_fin[3].x,
+        plays[i].coord_fin[3].y,
+        plays[i].play_direccion[3].direccion,
+        plays[i].coord_fin[4].x,
+        plays[i].coord_fin[4].y,
+        plays[i].play_direccion[4].direccion,
+        plays[i].coord_fin[5].x,
+        plays[i].coord_fin[5].y,
+        plays[i].play_direccion[5].direccion
+      );
+    // si tiene 5 jugadas
+    }else if(plays[i].isPlay == 1 && plays[i].coord_fin[0].x != 0 && plays[i].coord_fin[1].x != 0 && plays[i].coord_fin[2].x != 0 && plays[i].coord_fin[3].x != 0 && plays[i].coord_fin[4].x != 0){
+      printf("\n-jugada valida en--\n [%d - %d]  --\njugada1|%d - %d| direccion: %s\njugada2|%d - %d| direccion: %s\njugada3|%d - %d| direccion: %s\njugada4|%d - %d| direccion: %s\njugada5|%d - %d| direccion: %s\n", 
+        // i,
+        plays[i].coord_inicio.x,
+        plays[i].coord_inicio.y,
+        plays[i].coord_fin[0].x,
+        plays[i].coord_fin[0].y,
+        plays[i].play_direccion[0].direccion,
+        plays[i].coord_fin[1].x,
+        plays[i].coord_fin[1].y,
+        plays[i].play_direccion[1].direccion,
+        plays[i].coord_fin[2].x,
+        plays[i].coord_fin[2].y,
+        plays[i].play_direccion[2].direccion,
+        plays[i].coord_fin[3].x,
+        plays[i].coord_fin[3].y,
+        plays[i].play_direccion[3].direccion,
+        plays[i].coord_fin[4].x,
+        plays[i].coord_fin[4].y,
+        plays[i].play_direccion[4].direccion
+      );
+    // si tiene 4 jugadas
+    }else if(plays[i].isPlay == 1 && plays[i].coord_fin[0].x != 0 && plays[i].coord_fin[1].x != 0 && plays[i].coord_fin[2].x != 0 && plays[i].coord_fin[3].x != 0){
+      printf("\n-jugada valida en--\n [%d - %d]  --\njugada1|%d - %d| direccion: %s\njugada2|%d - %d| direccion: %s\njugada3|%d - %d| direccion: %s\njugada4|%d - %d| direccion: %s\n", 
+        // i,
+        plays[i].coord_inicio.x,
+        plays[i].coord_inicio.y,
+        plays[i].coord_fin[0].x,
+        plays[i].coord_fin[0].y,
+        plays[i].play_direccion[0].direccion,
+        plays[i].coord_fin[1].x,
+        plays[i].coord_fin[1].y,
+        plays[i].play_direccion[1].direccion,
+        plays[i].coord_fin[2].x,
+        plays[i].coord_fin[2].y,
+        plays[i].play_direccion[2].direccion,
+        plays[i].coord_fin[3].x,
+        plays[i].coord_fin[3].y,
+        plays[i].play_direccion[3].direccion
+      );
     // si tiene 3 jugadas
-    if(plays[i].isPlay == 1 && plays[i].coord_fin[0].x != 0 && plays[i].coord_fin[1].x != 0 && plays[i].coord_fin[2].x != 0){
+    }else if(plays[i].isPlay == 1 && plays[i].coord_fin[0].x != 0 && plays[i].coord_fin[1].x != 0 && plays[i].coord_fin[2].x != 0){
       printf("\n-jugada valida en---------------------\n [%d - %d]  ----------------------------\njugada1|%d - %d| direccion: %s\njugada2|%d - %d| direccion: %s\njugada3|%d - %d| direccion: %s\n", 
         // i,
         plays[i].coord_inicio.x,
@@ -199,18 +326,43 @@ void savePlays(jugadaPosible plays[], int index, int x, int y, int fin_x, int fi
       plays[i].isPlay = 1;
       // strcpy(plays[i].direccion, direccion);
       break;
-    //quiere decir que para ese valor de origen existen mas direcciones de jugadas posibles
     }
+    //quiere decir que para ese valor de origen existen mas direcciones de jugadas posibles
     else if(plays[i].coord_inicio.x == x && plays[i].coord_inicio.y == y){
-      if(plays[i].coord_fin[1].x == 0 && plays[i].coord_fin[1].y == 0){
+      if(plays[i].coord_fin[1].x == 0 && plays[i].coord_fin[1].y == 0){//si la segunda posicion del array de jugadas esta disponible tomala
         plays[i].coord_fin[1].x = fin_x;
         plays[i].coord_fin[1].y = fin_y;
         strcpy(plays[i].play_direccion[1].direccion, direccion);
         break;
-      }else{
+      }else if (plays[i].coord_fin[2].x == 0 && plays[i].coord_fin[2].y == 0){//si la tercera esta libre tomala, in the mais
         plays[i].coord_fin[2].x = fin_x;
         plays[i].coord_fin[2].y = fin_y;
         strcpy(plays[i].play_direccion[2].direccion, direccion);
+        break;
+      }else if (plays[i].coord_fin[3].x == 0 && plays[i].coord_fin[3].y == 0){//si la cuarta esta libre tomala, in the mais
+        plays[i].coord_fin[3].x = fin_x;
+        plays[i].coord_fin[3].y = fin_y;
+        strcpy(plays[i].play_direccion[3].direccion, direccion);
+        break;
+      }else if (plays[i].coord_fin[4].x == 0 && plays[i].coord_fin[4].y == 0){//si la quinta esta libre tomala, in the mais
+        plays[i].coord_fin[4].x = fin_x;
+        plays[i].coord_fin[4].y = fin_y;
+        strcpy(plays[i].play_direccion[4].direccion, direccion);
+        break;
+      }else if (plays[i].coord_fin[5].x == 0 && plays[i].coord_fin[5].y == 0){//si la sexta esta libre tomala, in the mais
+        plays[i].coord_fin[5].x = fin_x;
+        plays[i].coord_fin[5].y = fin_y;
+        strcpy(plays[i].play_direccion[5].direccion, direccion);
+        break;
+      }else if (plays[i].coord_fin[6].x == 0 && plays[i].coord_fin[6].y == 0){//si la septima esta libre tomala, in the mais
+        plays[i].coord_fin[6].x = fin_x;
+        plays[i].coord_fin[6].y = fin_y;
+        strcpy(plays[i].play_direccion[6].direccion, direccion);
+        break;
+      }else{//usa la octava y reza porque no hayan mas, que no deberian, pero bue
+        plays[i].coord_fin[7].x = fin_x;
+        plays[i].coord_fin[7].y = fin_y;
+        strcpy(plays[i].play_direccion[7].direccion, direccion);
         break;
       }
     }
@@ -249,6 +401,56 @@ void getAllOrigins(jugadaPosible plays[], jugadaPosible* play, jugadaPosible jug
       jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[2].y;
       jugadaMultiple[count].isPlay = true;
       strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[2].direccion);
+      count++;
+      continue;
+    }
+    if(play->coord_fin[0].x == plays[i].coord_fin[3].x && play->coord_fin[0].y == plays[i].coord_fin[3].y){
+      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
+      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
+      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[3].x;
+      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[3].y;
+      jugadaMultiple[count].isPlay = true;
+      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[3].direccion);
+      count++;
+      continue;
+    }
+    if(play->coord_fin[0].x == plays[i].coord_fin[4].x && play->coord_fin[0].y == plays[i].coord_fin[4].y){
+      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
+      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
+      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[4].x;
+      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[4].y;
+      jugadaMultiple[count].isPlay = true;
+      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[4].direccion);
+      count++;
+      continue;
+    }
+    if(play->coord_fin[0].x == plays[i].coord_fin[5].x && play->coord_fin[0].y == plays[i].coord_fin[5].y){
+      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
+      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
+      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[5].x;
+      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[5].y;
+      jugadaMultiple[count].isPlay = true;
+      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[5].direccion);
+      count++;
+      continue;
+    }
+    if(play->coord_fin[0].x == plays[i].coord_fin[6].x && play->coord_fin[0].y == plays[i].coord_fin[6].y){
+      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
+      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
+      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[6].x;
+      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[6].y;
+      jugadaMultiple[count].isPlay = true;
+      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[6].direccion);
+      count++;
+      continue;
+    }
+    if(play->coord_fin[0].x == plays[i].coord_fin[7].x && play->coord_fin[0].y == plays[i].coord_fin[7].y){
+      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
+      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
+      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[7].x;
+      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[7].y;
+      jugadaMultiple[count].isPlay = true;
+      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[7].direccion);
       count++;
       continue;
     }
@@ -581,6 +783,46 @@ jugadaPosible validarJugada(jugador* player, jugadaPosible jugadasPosibles[]) {
           play.coord_fin[0].x = jugadasPosibles[i].coord_fin[2].x;
           play.coord_fin[0].y = jugadasPosibles[i].coord_fin[2].y;
           strcpy(play.play_direccion[2].direccion, jugadasPosibles[i].play_direccion[2].direccion);
+          encontrado = true;
+        }
+        else if(jugadasPosibles[i].coord_fin[3].x == x && jugadasPosibles[i].coord_fin[3].y == y && jugadasPosibles[i].isPlay == true) {
+          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
+          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
+          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[3].x;
+          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[3].y;
+          strcpy(play.play_direccion[3].direccion, jugadasPosibles[i].play_direccion[3].direccion);
+          encontrado = true;
+        }
+        else if(jugadasPosibles[i].coord_fin[4].x == x && jugadasPosibles[i].coord_fin[4].y == y && jugadasPosibles[i].isPlay == true) {
+          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
+          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
+          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[4].x;
+          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[4].y;
+          strcpy(play.play_direccion[4].direccion, jugadasPosibles[i].play_direccion[4].direccion);
+          encontrado = true;
+        }
+        else if(jugadasPosibles[i].coord_fin[5].x == x && jugadasPosibles[i].coord_fin[5].y == y && jugadasPosibles[i].isPlay == true) {
+          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
+          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
+          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[5].x;
+          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[5].y;
+          strcpy(play.play_direccion[5].direccion, jugadasPosibles[i].play_direccion[5].direccion);
+          encontrado = true;
+        }
+        else if(jugadasPosibles[i].coord_fin[6].x == x && jugadasPosibles[i].coord_fin[6].y == y && jugadasPosibles[i].isPlay == true) {
+          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
+          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
+          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[6].x;
+          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[6].y;
+          strcpy(play.play_direccion[6].direccion, jugadasPosibles[i].play_direccion[6].direccion);
+          encontrado = true;
+        }
+        else if(jugadasPosibles[i].coord_fin[7].x == x && jugadasPosibles[i].coord_fin[7].y == y && jugadasPosibles[i].isPlay == true) {
+          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
+          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
+          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[7].x;
+          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[7].y;
+          strcpy(play.play_direccion[7].direccion, jugadasPosibles[i].play_direccion[7].direccion);
           encontrado = true;
         }
       }
@@ -983,7 +1225,7 @@ int main() {
     //----------------------------------------------------------------------------------------------- SI NO HAY JUGADA POSIBLE X2 SE FINIQUITIAMO ACA
 
     //MUESTRA LAS JUGADAS VALIDAS
-    // showPlays(play); 
+    showPlays(play); 
 
     //MUESTRA EL ESTADO ACTUAL DEL TABLERO
     showInfo(jugadores); //con la info de los jugadores
