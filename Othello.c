@@ -942,26 +942,8 @@ void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], 
   int casillasID[8] = { 0 };
   int count2 = 0; //dependiendo de la cantidad de direcciones que hallan
 
-  if(count == 1){
-    printf("1 linea/s\n");
-    obtenerIdDeCasillasAfectadas(
-      &count2,
-      casillasID,
-      tab, 
-      jugadaMultiple[0].play_direccion[0].direccion,
-      jugadaMultiple[0].coord_inicio.x,
-      jugadaMultiple[0].coord_inicio.y,
-      jugadaMultiple[0].coord_fin[0].x,
-      jugadaMultiple[0].coord_fin[0].y
-    );
-
-    for (int i = 0; i < count2; i++){
-      updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
-    }
-  }
-
   //2 direcciones | if count == 1
-  // if(count == 2){
+  if(count == 2){
     printf("2 linea/s\n");
     for (int i = 0; i < count; i++){
       obtenerIdDeCasillasAfectadas(
@@ -979,7 +961,7 @@ void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], 
         updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
       }
     }
-
+  }
 
 }
 //INICIAR TABLERO
