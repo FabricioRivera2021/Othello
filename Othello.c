@@ -911,32 +911,32 @@ void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], 
   }
   
   //----> queda guarrdado en jugadaMultiple, printf PARA DEBUGEAR
-  printf("coordenadas de origen LINEA 660\n [%d - %d] -> %s\n  [%d - %d] -> %s\n  [%d - %d] -> %s\n  [%d - %d] -> %s\n [%d - %d] -> %s\n [%d - %d] -> %s\n [%d - %d] -> %s\n [%d - %d] -> %s\n", 
-    jugadaMultiple[0].coord_inicio.x,
-    jugadaMultiple[0].coord_inicio.y,
-    jugadaMultiple[0].play_direccion[0].direccion,
-    jugadaMultiple[1].coord_inicio.x,
-    jugadaMultiple[1].coord_inicio.y,
-    jugadaMultiple[1].play_direccion[0].direccion,
-    jugadaMultiple[2].coord_inicio.x,
-    jugadaMultiple[2].coord_inicio.y,
-    jugadaMultiple[2].play_direccion[0].direccion,
-    jugadaMultiple[3].coord_inicio.x,
-    jugadaMultiple[3].coord_inicio.y,
-    jugadaMultiple[3].play_direccion[0].direccion,
-    jugadaMultiple[4].coord_inicio.x,
-    jugadaMultiple[4].coord_inicio.y,
-    jugadaMultiple[4].play_direccion[0].direccion,
-    jugadaMultiple[5].coord_inicio.x,
-    jugadaMultiple[5].coord_inicio.y,
-    jugadaMultiple[5].play_direccion[0].direccion,
-    jugadaMultiple[6].coord_inicio.x,
-    jugadaMultiple[6].coord_inicio.y,
-    jugadaMultiple[6].play_direccion[0].direccion,
-    jugadaMultiple[7].coord_inicio.x,
-    jugadaMultiple[7].coord_inicio.y,
-    jugadaMultiple[7].play_direccion[0].direccion
-  );
+  // printf("coordenadas de origen LINEA 660\n [%d - %d] -> %s\n  [%d - %d] -> %s\n  [%d - %d] -> %s\n  [%d - %d] -> %s\n [%d - %d] -> %s\n [%d - %d] -> %s\n [%d - %d] -> %s\n [%d - %d] -> %s\n", 
+  //   jugadaMultiple[0].coord_inicio.x,
+  //   jugadaMultiple[0].coord_inicio.y,
+  //   jugadaMultiple[0].play_direccion[0].direccion,
+  //   jugadaMultiple[1].coord_inicio.x,
+  //   jugadaMultiple[1].coord_inicio.y,
+  //   jugadaMultiple[1].play_direccion[0].direccion,
+  //   jugadaMultiple[2].coord_inicio.x,
+  //   jugadaMultiple[2].coord_inicio.y,
+  //   jugadaMultiple[2].play_direccion[0].direccion,
+  //   jugadaMultiple[3].coord_inicio.x,
+  //   jugadaMultiple[3].coord_inicio.y,
+  //   jugadaMultiple[3].play_direccion[0].direccion,
+  //   jugadaMultiple[4].coord_inicio.x,
+  //   jugadaMultiple[4].coord_inicio.y,
+  //   jugadaMultiple[4].play_direccion[0].direccion,
+  //   jugadaMultiple[5].coord_inicio.x,
+  //   jugadaMultiple[5].coord_inicio.y,
+  //   jugadaMultiple[5].play_direccion[0].direccion,
+  //   jugadaMultiple[6].coord_inicio.x,
+  //   jugadaMultiple[6].coord_inicio.y,
+  //   jugadaMultiple[6].play_direccion[0].direccion,
+  //   jugadaMultiple[7].coord_inicio.x,
+  //   jugadaMultiple[7].coord_inicio.y,
+  //   jugadaMultiple[7].play_direccion[0].direccion
+  // );
 
   //1 direccion | if count == 0
   int casillasID[8] = { 0 };
@@ -961,9 +961,9 @@ void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], 
   }
 
   //2 direcciones | if count == 1
-  if(count == 2){
+  // if(count == 2){
     printf("2 linea/s\n");
-    for (int i = 0; i < 2; i++){
+    for (int i = 0; i < count; i++){
       obtenerIdDeCasillasAfectadas(
         &count2,
         casillasID,
@@ -979,128 +979,6 @@ void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], 
         updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
       }
     }
-  }
-
-  //3 direcciones !!!
-  if(count == 3){
-    printf("3 linea/s\n");
-    for (int i = 0; i < 3; i++){
-      obtenerIdDeCasillasAfectadas(
-        &count2,
-        casillasID,
-        tab, 
-        jugadaMultiple[i].play_direccion[0].direccion,
-        jugadaMultiple[i].coord_inicio.x,
-        jugadaMultiple[i].coord_inicio.y,
-        jugadaMultiple[i].coord_fin[0].x,
-        jugadaMultiple[i].coord_fin[0].y
-      );
-
-      for (int i = 0; i < count2; i++){
-        updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
-      }
-    }
-  }
-
-  if(count == 4){
-    printf("4 linea/s\n");
-    for (int i = 0; i < 4; i++){
-      obtenerIdDeCasillasAfectadas(
-        &count2,
-        casillasID,
-        tab, 
-        jugadaMultiple[i].play_direccion[0].direccion,
-        jugadaMultiple[i].coord_inicio.x,
-        jugadaMultiple[i].coord_inicio.y,
-        jugadaMultiple[i].coord_fin[0].x,
-        jugadaMultiple[i].coord_fin[0].y
-      );
-
-      for (int i = 0; i < count2; i++){
-        updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
-      }
-    }
-  }
-  if(count == 5){
-    printf("5 linea/s\n");
-    for (int i = 0; i < 5; i++){
-      obtenerIdDeCasillasAfectadas(
-        &count2,
-        casillasID,
-        tab, 
-        jugadaMultiple[i].play_direccion[0].direccion,
-        jugadaMultiple[i].coord_inicio.x,
-        jugadaMultiple[i].coord_inicio.y,
-        jugadaMultiple[i].coord_fin[0].x,
-        jugadaMultiple[i].coord_fin[0].y
-      );
-
-      for (int i = 0; i < count2; i++){
-        updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
-      }
-    }
-  }
-  if(count == 6){
-    printf("6 linea/s\n");
-    for (int i = 0; i < 6; i++){
-      obtenerIdDeCasillasAfectadas(
-        &count2,
-        casillasID,
-        tab, 
-        jugadaMultiple[i].play_direccion[0].direccion,
-        jugadaMultiple[i].coord_inicio.x,
-        jugadaMultiple[i].coord_inicio.y,
-        jugadaMultiple[i].coord_fin[0].x,
-        jugadaMultiple[i].coord_fin[0].y
-      );
-
-      for (int i = 0; i < count2; i++){
-        updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
-      }
-    }
-  }
-  if(count == 7){
-    printf("7 linea/s\n");
-    for (int i = 0; i < 7; i++){
-      obtenerIdDeCasillasAfectadas(
-        &count2,
-        casillasID,
-        tab, 
-        jugadaMultiple[i].play_direccion[0].direccion,
-        jugadaMultiple[i].coord_inicio.x,
-        jugadaMultiple[i].coord_inicio.y,
-        jugadaMultiple[i].coord_fin[0].x,
-        jugadaMultiple[i].coord_fin[0].y
-      );
-
-      for (int i = 0; i < count2; i++){
-        updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
-      }
-    }
-  }
-  if(count == 8){
-    printf("8 linea/s\n");
-    printf("count2: %d\n", count2);
-
-    for (int i = 0; i < 8; i++){
-      obtenerIdDeCasillasAfectadas(
-        &count2,
-        casillasID,
-        tab, 
-        jugadaMultiple[i].play_direccion[0].direccion,
-        jugadaMultiple[i].coord_inicio.x,
-        jugadaMultiple[i].coord_inicio.y,
-        jugadaMultiple[i].coord_fin[0].x,
-        jugadaMultiple[i].coord_fin[0].y
-      );
-
-      printf("casillasID: %d\n", casillasID[i]);
-
-      for (int i = 0; i < count2; i++){
-        updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
-      }
-    }
-  }
 
 
 }
