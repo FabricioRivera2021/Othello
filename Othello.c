@@ -909,59 +909,28 @@ void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], 
       count++;
     }
   }
-  
-  //----> queda guarrdado en jugadaMultiple, printf PARA DEBUGEAR
-  // printf("coordenadas de origen LINEA 660\n [%d - %d] -> %s\n  [%d - %d] -> %s\n  [%d - %d] -> %s\n  [%d - %d] -> %s\n [%d - %d] -> %s\n [%d - %d] -> %s\n [%d - %d] -> %s\n [%d - %d] -> %s\n", 
-  //   jugadaMultiple[0].coord_inicio.x,
-  //   jugadaMultiple[0].coord_inicio.y,
-  //   jugadaMultiple[0].play_direccion[0].direccion,
-  //   jugadaMultiple[1].coord_inicio.x,
-  //   jugadaMultiple[1].coord_inicio.y,
-  //   jugadaMultiple[1].play_direccion[0].direccion,
-  //   jugadaMultiple[2].coord_inicio.x,
-  //   jugadaMultiple[2].coord_inicio.y,
-  //   jugadaMultiple[2].play_direccion[0].direccion,
-  //   jugadaMultiple[3].coord_inicio.x,
-  //   jugadaMultiple[3].coord_inicio.y,
-  //   jugadaMultiple[3].play_direccion[0].direccion,
-  //   jugadaMultiple[4].coord_inicio.x,
-  //   jugadaMultiple[4].coord_inicio.y,
-  //   jugadaMultiple[4].play_direccion[0].direccion,
-  //   jugadaMultiple[5].coord_inicio.x,
-  //   jugadaMultiple[5].coord_inicio.y,
-  //   jugadaMultiple[5].play_direccion[0].direccion,
-  //   jugadaMultiple[6].coord_inicio.x,
-  //   jugadaMultiple[6].coord_inicio.y,
-  //   jugadaMultiple[6].play_direccion[0].direccion,
-  //   jugadaMultiple[7].coord_inicio.x,
-  //   jugadaMultiple[7].coord_inicio.y,
-  //   jugadaMultiple[7].play_direccion[0].direccion
-  // );
 
   //1 direccion | if count == 0
   int casillasID[8] = { 0 };
   int count2 = 0; //dependiendo de la cantidad de direcciones que hallan
 
-  //2 direcciones | if count == 1
-  if(count == 2){
-    printf("2 linea/s\n");
-    for (int i = 0; i < count; i++){
-      obtenerIdDeCasillasAfectadas(
-        &count2,
-        casillasID,
-        tab, 
-        jugadaMultiple[i].play_direccion[0].direccion,
-        jugadaMultiple[i].coord_inicio.x,
-        jugadaMultiple[i].coord_inicio.y,
-        jugadaMultiple[i].coord_fin[0].x,
-        jugadaMultiple[i].coord_fin[0].y
-      );
+  for (int i = 0; i < count; i++){
+    obtenerIdDeCasillasAfectadas(
+      &count2,
+      casillasID,
+      tab, 
+      jugadaMultiple[i].play_direccion[0].direccion,
+      jugadaMultiple[i].coord_inicio.x,
+      jugadaMultiple[i].coord_inicio.y,
+      jugadaMultiple[i].coord_fin[0].x,
+      jugadaMultiple[i].coord_fin[0].y
+    );
 
-      for (int i = 0; i < count2; i++){
-        updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
-      }
+    for (int i = 0; i < count2; i++){
+      updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
     }
   }
+
 
 }
 //INICIAR TABLERO
@@ -1201,7 +1170,7 @@ int main() {
     //----------------------------------------------------------------------------------------------- SI NO HAY JUGADA POSIBLE X2 SE FINIQUITIAMO ACA
 
     //MUESTRA LAS JUGADAS VALIDAS
-    showPlays(play); 
+    // showPlays(play); 
 
     //MUESTRA EL ESTADO ACTUAL DEL TABLERO
     showInfo(jugadores); //con la info de los jugadores
