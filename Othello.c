@@ -22,7 +22,7 @@ typedef struct {
 
 typedef struct {
   coordenada coord_inicio;
-  coordenada coord_fin[8];//a lo sumo 3 coordenadas al mismo tiempo
+  coordenada coord_fin[8];
   play_direccions play_direccion[8];
   bool isPlay;
 } jugadaPosible;
@@ -33,34 +33,20 @@ typedef struct {
 } tablero;
 
 typedef struct {
-  int id;
   char nombre[60]; 
   char ficha; //ficha que este usando el jugador
   int turno; //contador de turnos
   bool turnoActual; //para saber quien tuvo el ultimo turno
 } jugador;
 
-/*POSIBLE REFACTORIZACION DE LA BUSQUEDA DE JUGADAS POSIBLES EN -VALIDARJUGADA-
- jugadaPosible buscarJugadaPosible("array de jugadas posibles", int I, int J){
- jugadaPosible jugadaVacia;
- jugadaVacia.isPlay = false;
-
- if(jugadasPosibles[I].coord_fin[J].x == x && jugadasPosibles[I].coord_fin[J].y == y && jugadasPosibles[i].isPlay == true) {
-  play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
-  play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
-  play.coord_fin[0].x = jugadasPosibles[i].coord_fin[J].x;
-  play.coord_fin[0].y = jugadasPosibles[i].coord_fin[J].y;
-  strcpy(play.play_direccion[0].direccion, jugadasPosibles[I].play_direccion[J].direccion);
-  Si lo encontro RETURN play -> encontrado = true;
- }
-
- si no lo encontro RETURN jugadaVacia;
-}*/
-
-
-void mostrarConteoFichas(int negras, int blancas){
-  printf("Blancas: %d\n", blancas);
-  printf("Negras: %d\n", negras);
+void mensajeFinal(int blancas, int negras){
+    if(negras > blancas){
+      printf("Ganan las fichas negras.. con %d en el tablero contra %d fichas blancas\n", negras, blancas);
+    }else if(negras < blancas){
+      printf("Ganan las fichas blancas.. con %d en el tablero contra %d fichas negras\n", blancas, negras);
+    }else if(negras == blancas){
+      printf("Empate....  - negras: %d blancas: %d\n", negras, blancas);
+    }
 }
 
 int contarFichas(tablero* tab, char ficha){
@@ -70,7 +56,6 @@ int contarFichas(tablero* tab, char ficha){
       count++;
     }
   }
-
   return count;
 }
 
@@ -81,22 +66,18 @@ int chckearSiHayJugadas(jugadaPosible plays[]){
       break;
     }
   }
-
   return 0;
 }
 
 //ACTUALIZAR FICHAS DEPENDIENDO DEL ID Y DE LA FICHA ACTUAL DE LA JUGADA
 void updateFicha(tablero* tab, int id, char ficha) {
-
   tab->jugada[id].ficha = ficha;
 }
 
 //obtener la direccion para una coordenada de jugada en concreto
 play_direccions getDireccion (jugadaPosible* play, jugadaPosible plays[]) {
-
   play_direccions direcciones[3];
   return *direcciones;
-
 }
 
 //devuelve el id de la casilla para una coordenada en concreto
@@ -110,6 +91,7 @@ int getIdCasilla (tablero* tab, int x, int y) {
       id++;
     }
   }
+  return 0;
 }
 
 //iniciar el array jugadasPosibles o "limpiarlo"
@@ -117,32 +99,49 @@ void iniciarPlays (jugadaPosible plays[]){
   for(int i = 0; i < 64; i++){
       plays[i].coord_inicio.x = 0;
       plays[i].coord_inicio.y = 0;
-      plays[i].coord_fin[0].x = 0;
-      plays[i].coord_fin[0].y = 0;
-      plays[i].coord_fin[1].x = 0;
-      plays[i].coord_fin[1].y = 0;
-      plays[i].coord_fin[2].x = 0;
-      plays[i].coord_fin[2].y = 0;
-      plays[i].coord_fin[3].x = 0;
-      plays[i].coord_fin[3].y = 0;
-      plays[i].coord_fin[4].x = 0;
-      plays[i].coord_fin[4].y = 0;
-      plays[i].coord_fin[5].x = 0;
-      plays[i].coord_fin[5].y = 0;
-      plays[i].coord_fin[6].x = 0;
-      plays[i].coord_fin[6].y = 0;
-      plays[i].coord_fin[7].x = 0;
-      plays[i].coord_fin[7].y = 0;
-      strcpy(plays[i].play_direccion[0].direccion, "none");
-      strcpy(plays[i].play_direccion[1].direccion, "none");
-      strcpy(plays[i].play_direccion[2].direccion, "none");
-      strcpy(plays[i].play_direccion[3].direccion, "none");
-      strcpy(plays[i].play_direccion[4].direccion, "none");
-      strcpy(plays[i].play_direccion[5].direccion, "none");
-      strcpy(plays[i].play_direccion[6].direccion, "none");
-      strcpy(plays[i].play_direccion[7].direccion, "none");
+      for (int j = 0; j < 8; j++){
+        plays[i].coord_fin[j].x = 0;
+        plays[i].coord_fin[j].y = 0;
+        strcpy(plays[i].play_direccion[j].direccion, "none");
+      }
       plays[i].isPlay = false;
   }
+}
+
+//INICIAR TABLERO
+void iniciarTablero(tablero* tab){
+  int id = 0;
+  // Inciar el tablero con todas las posiciones en '_'
+  for (int j = 1; j <= 8; j++) {
+      for (int k = 1; k <= 8; k++) {
+          tab->jugada[id].x = j;
+          tab->jugada[id].y = k;
+          tab->jugada[id].ficha = '_';
+          tab->jugada[id].empty = true;
+          id++;
+      }
+  }
+  
+  //colocar fichas en la posicion inicial
+  tab->jugada[27].x = 4;
+  tab->jugada[27].y = 4;
+  tab->jugada[27].ficha = 'O';
+  tab->jugada[27].empty = false;
+
+  tab->jugada[28].x = 4;
+  tab->jugada[28].y = 5;
+  tab->jugada[28].ficha = 'X';
+  tab->jugada[28].empty = false;
+  
+  tab->jugada[35].x = 5;
+  tab->jugada[35].y = 4;
+  tab->jugada[35].ficha = 'X';
+  tab->jugada[35].empty = false;
+
+  tab->jugada[36].x = 5;
+  tab->jugada[36].y = 5;
+  tab->jugada[36].ficha = 'O';
+  tab->jugada[36].empty = false;
 }
 
 //mostrar las jugadas que sean validas para la ficha que este actualmente en juego
@@ -318,147 +317,24 @@ void showPlays (jugadaPosible plays[]){
   }
 }
 
-//encargado de insertar las posibles jugadas en el array de jugadas posibles
-void savePlays(jugadaPosible plays[], int index, int x, int y, int fin_x, int fin_y, char direccion[]){
-  for (int i = 0; i < 64; i++){
-    //quiere decir que es un espacio vacio para guardar
-    if(plays[i].isPlay == 0){ 
-      plays[i].coord_inicio.x = x;
-      plays[i].coord_inicio.y = y;
-      plays[i].coord_fin[0].x = fin_x;
-      plays[i].coord_fin[0].y = fin_y;
-      strcpy(plays[i].play_direccion[0].direccion, direccion);
-      plays[i].isPlay = 1;
-      break;
-    }
-    //quiere decir que para ese valor de origen existen mas direcciones de jugadas posibles
-    else if(plays[i].coord_inicio.x == x && plays[i].coord_inicio.y == y){
-      if(plays[i].coord_fin[1].x == 0 && plays[i].coord_fin[1].y == 0){//si la segunda posicion del array de jugadas esta disponible tomala
-        plays[i].coord_fin[1].x = fin_x;
-        plays[i].coord_fin[1].y = fin_y;
-        strcpy(plays[i].play_direccion[1].direccion, direccion);
-        break;
-      }else if (plays[i].coord_fin[2].x == 0 && plays[i].coord_fin[2].y == 0){//si la tercera esta libre tomala, in the mais
-        plays[i].coord_fin[2].x = fin_x;
-        plays[i].coord_fin[2].y = fin_y;
-        strcpy(plays[i].play_direccion[2].direccion, direccion);
-        break;
-      }else if (plays[i].coord_fin[3].x == 0 && plays[i].coord_fin[3].y == 0){//si la cuarta esta libre tomala, in the mais
-        plays[i].coord_fin[3].x = fin_x;
-        plays[i].coord_fin[3].y = fin_y;
-        strcpy(plays[i].play_direccion[3].direccion, direccion);
-        break;
-      }else if (plays[i].coord_fin[4].x == 0 && plays[i].coord_fin[4].y == 0){//si la quinta esta libre tomala, in the mais
-        plays[i].coord_fin[4].x = fin_x;
-        plays[i].coord_fin[4].y = fin_y;
-        strcpy(plays[i].play_direccion[4].direccion, direccion);
-        break;
-      }else if (plays[i].coord_fin[5].x == 0 && plays[i].coord_fin[5].y == 0){//si la sexta esta libre tomala, in the mais
-        plays[i].coord_fin[5].x = fin_x;
-        plays[i].coord_fin[5].y = fin_y;
-        strcpy(plays[i].play_direccion[5].direccion, direccion);
-        break;
-      }else if (plays[i].coord_fin[6].x == 0 && plays[i].coord_fin[6].y == 0){//si la septima esta libre tomala, in the mais
-        plays[i].coord_fin[6].x = fin_x;
-        plays[i].coord_fin[6].y = fin_y;
-        strcpy(plays[i].play_direccion[6].direccion, direccion);
-        break;
-      }else{//usa la octava y reza porque no hayan mas, que no deberian, pero bue
-        plays[i].coord_fin[7].x = fin_x;
-        plays[i].coord_fin[7].y = fin_y;
-        strcpy(plays[i].play_direccion[7].direccion, direccion);
-        break;
-      }
-    }
-  }
-}
-
-/*obtener todos los origenes de la jugada que se ingreso - HASTA 3 MAXIMO
+/*obtener todos los origenes de la jugada que se ingreso
   - ya que una una posicion de origen puede desenvocar en mas de una "linea" aqui se buscan esos origenes, que dada una posicion valida
-    para hacer una jugada crearian varias lineas de "accion", hasta un maximo de 3 lineas afectadas
+  para hacer una jugada crearian varias lineas de "accion"
 */
 void getAllOrigins(jugadaPosible plays[], jugadaPosible* play, jugadaPosible jugadaMultiple[]) {
   int count = 0;
   for (int i = 0; i < 64; i++){
-    if(play->coord_fin[0].x == plays[i].coord_fin[0].x && play->coord_fin[0].y == plays[i].coord_fin[0].y){
-      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
-      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
-      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[0].x;
-      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[0].y;
-      jugadaMultiple[count].isPlay = true;
-      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[0].direccion); 
-      count++;
-      continue;
-    }
-    if(play->coord_fin[0].x == plays[i].coord_fin[1].x && play->coord_fin[0].y == plays[i].coord_fin[1].y){
-      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
-      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
-      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[1].x;
-      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[1].y;
-      jugadaMultiple[count].isPlay = true;
-      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[1].direccion);
-      count++;
-      continue;
-    }
-    if(play->coord_fin[0].x == plays[i].coord_fin[2].x && play->coord_fin[0].y == plays[i].coord_fin[2].y){
-      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
-      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
-      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[2].x;
-      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[2].y;
-      jugadaMultiple[count].isPlay = true;
-      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[2].direccion);
-      count++;
-      continue;
-    }
-    if(play->coord_fin[0].x == plays[i].coord_fin[3].x && play->coord_fin[0].y == plays[i].coord_fin[3].y){
-      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
-      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
-      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[3].x;
-      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[3].y;
-      jugadaMultiple[count].isPlay = true;
-      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[3].direccion);
-      count++;
-      continue;
-    }
-    if(play->coord_fin[0].x == plays[i].coord_fin[4].x && play->coord_fin[0].y == plays[i].coord_fin[4].y){
-      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
-      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
-      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[4].x;
-      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[4].y;
-      jugadaMultiple[count].isPlay = true;
-      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[4].direccion);
-      count++;
-      continue;
-    }
-    if(play->coord_fin[0].x == plays[i].coord_fin[5].x && play->coord_fin[0].y == plays[i].coord_fin[5].y){
-      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
-      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
-      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[5].x;
-      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[5].y;
-      jugadaMultiple[count].isPlay = true;
-      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[5].direccion);
-      count++;
-      continue;
-    }
-    if(play->coord_fin[0].x == plays[i].coord_fin[6].x && play->coord_fin[0].y == plays[i].coord_fin[6].y){
-      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
-      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
-      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[6].x;
-      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[6].y;
-      jugadaMultiple[count].isPlay = true;
-      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[6].direccion);
-      count++;
-      continue;
-    }
-    if(play->coord_fin[0].x == plays[i].coord_fin[7].x && play->coord_fin[0].y == plays[i].coord_fin[7].y){
-      jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
-      jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
-      jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[7].x;
-      jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[7].y;
-      jugadaMultiple[count].isPlay = true;
-      strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[7].direccion);
-      count++;
-      continue;
+    for (int j = 0; j < 8; j++){
+      if(play->coord_fin[0].x == plays[i].coord_fin[j].x && play->coord_fin[0].y == plays[i].coord_fin[j].y){
+        jugadaMultiple[count].coord_inicio.x = plays[i].coord_inicio.x;
+        jugadaMultiple[count].coord_inicio.y = plays[i].coord_inicio.y;
+        jugadaMultiple[count].coord_fin[0].x = plays[i].coord_fin[j].x;
+        jugadaMultiple[count].coord_fin[0].y = plays[i].coord_fin[j].y;
+        jugadaMultiple[count].isPlay = true;
+        strcpy(jugadaMultiple[count].play_direccion[0].direccion, plays[i].play_direccion[j].direccion); 
+        count++;
+        continue;
+      }
     }
   }
 }
@@ -503,10 +379,154 @@ void obtenerIdDeCasillasAfectadas(int* count2, int resultado[], tablero* tab, ch
   (*count2)++;
 }
 
+//INGRESAR UNA JUGADA, Y CAMBIAR LAS FICHAS AFECTADAS EN DICHA JUGADA return 1 si OK | return 0 si MAL
+void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], jugador* player) {
+  //conseguir la ficha del jugador actual
+  char ficha = player->ficha;
+
+  int count = 0;
+  jugadaPosible jugadaMultiple[8];
+
+  for (int i = 0; i < 8; i++){//inicializar jugadaMultiple
+    jugadaMultiple[i].coord_inicio.x = 0;
+    jugadaMultiple[i].coord_inicio.y = 0;
+    jugadaMultiple[i].coord_fin[0].x = 0;
+    jugadaMultiple[i].coord_fin[0].y = 0;
+    jugadaMultiple[i].coord_fin[1].x = 0;
+    jugadaMultiple[i].coord_fin[1].y = 0;
+    jugadaMultiple[i].coord_fin[2].x = 0;
+    jugadaMultiple[i].coord_fin[2].y = 0;
+    jugadaMultiple[i].isPlay = false;
+    strcpy(jugadaMultiple[i].play_direccion[0].direccion, "none");
+    strcpy(jugadaMultiple[i].play_direccion[1].direccion, "none");
+    strcpy(jugadaMultiple[i].play_direccion[2].direccion, "none");
+  }
+  
+  int id[8] = {0};
+  // SI las coordenadas de final tienen mas de un origen hay que afectar mas de una direccion, sino... 1 sola direccion
+
+  //en jugada multiple quedan guardadas las jugadas que afecten mas de una LINEA al mismo tiempo, lo que llamare "jugada multiple"
+  getAllOrigins(plays, jugada, jugadaMultiple); 
+
+  //checkeo cuantas jugadas multiples hay, 1, 2 o 3
+  for (int i = 0; i < 8; i++){
+    if(jugadaMultiple[i].isPlay){
+      count++;
+    }
+  }
+
+  //1 direccion | if count == 0
+  int casillasID[8] = { 0 };
+  int count2 = 0; //dependiendo de la cantidad de direcciones que hallan
+
+  for (int i = 0; i < count; i++){
+    obtenerIdDeCasillasAfectadas(
+      &count2,
+      casillasID,
+      tab, 
+      jugadaMultiple[i].play_direccion[0].direccion,
+      jugadaMultiple[i].coord_inicio.x,
+      jugadaMultiple[i].coord_inicio.y,
+      jugadaMultiple[i].coord_fin[0].x,
+      jugadaMultiple[i].coord_fin[0].y
+    );
+
+    for (int i = 0; i < count2; i++){
+      updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
+    }
+  }
+}
+
+//VALIDAR QUE LA JUGADA INGRESADA PERTENEZCA A LAS JUGADAS VALIDAS
+//RETORNA la jugada que el usuario ingrese, si es valida
+jugadaPosible validarJugada(jugador* player, jugadaPosible jugadasPosibles[]) {
+  jugadaPosible play;
+  int x, y;
+  bool encontrado = false;
+
+  int showJugadasValidas = 0;
+
+  //si las coordenadas que se ingresan estan en el array de jugadasPosibles, que seria el valor de la casilla vacia, todo OK
+  //sino jugada invalida y que vuela a intentarlo
+  int topeDeIntentos = 5;
+  int i;
+  while(!encontrado && topeDeIntentos > 0){
+    if((strcmp(player->nombre, "cachito") == 0)){
+      printf("Hola cachito!! :)\n");
+    }
+    printf("Turno --> %s \n", player->nombre);
+    printf("ingresa una jugada: \n");
+    scanf("%d",&x);
+    scanf("%d",&y);
+    
+    if((x > 0 && x < 9) && (y > 0 && y < 9)){
+      for (i = 0; i < 64; i++){
+        for (int j = 0; j < 8; j++){
+          if(jugadasPosibles[i].coord_fin[j].x == x && jugadasPosibles[i].coord_fin[j].y == y && jugadasPosibles[i].isPlay == true) {
+            play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
+            play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
+            play.coord_fin[0].x = jugadasPosibles[i].coord_fin[j].x;
+            play.coord_fin[0].y = jugadasPosibles[i].coord_fin[j].y;
+            strcpy(play.play_direccion[j].direccion, jugadasPosibles[i].play_direccion[j].direccion);
+            encontrado = true;
+          } 
+        }
+      }
+
+      if(!encontrado){
+        printf("Oops, %d - %d es una casilla invalida :(\n\n", x, y);
+        showJugadasValidas++;
+        if(showJugadasValidas > 2){
+          showPlays(jugadasPosibles);
+          printf("\n\n");
+        }
+      }
+      
+    }else{
+      topeDeIntentos--;
+      break;
+    }
+  }
+
+  //SI LLEGO AL TOPE DE INTENTOS ES PORQUE EL JUGADOR INGRESO CUALQUIER COSA MENOS UN NUMERO :(
+  //y el programa crashea!!
+  if(topeDeIntentos <= 0){
+    printf("Error, saliendo del progama... se ingreso algo que no era un numero\n");
+  }
+
+  //SI LLEGO HASTA ACA EN TEORIA SE INGRESO UNA JUGADA VALIDA, SE DEVUELVE la coordenada original de la ficha
+  return play;
+}
+
+//encargado de insertar las posibles jugadas en el array de jugadas posibles
+void savePlays(jugadaPosible plays[], int index, int x, int y, int fin_x, int fin_y, char direccion[]){
+  for (int i = 0; i < 64; i++){
+    //quiere decir que es un espacio vacio para guardar
+    if(plays[i].isPlay == 0){ 
+      plays[i].coord_inicio.x = x;
+      plays[i].coord_inicio.y = y;
+      plays[i].coord_fin[0].x = fin_x;
+      plays[i].coord_fin[0].y = fin_y;
+      strcpy(plays[i].play_direccion[0].direccion, direccion);
+      plays[i].isPlay = 1;
+      break;
+    }else if(plays[i].coord_inicio.x == x && plays[i].coord_inicio.y == y){ //quiere decir que para ese valor de origen existen mas direcciones de jugadas posibles
+      for (int j = 1; j <= 7; j++){
+        if(plays[i].coord_fin[j].x == 0 && plays[i].coord_fin[j].y == 0){//dependiendo de cuantas direcciones de jugadas hayan se ingresan
+          plays[i].coord_fin[j].x = fin_x;
+          plays[i].coord_fin[j].y = fin_y;
+          strcpy(plays[i].play_direccion[j].direccion, direccion);
+          break;
+        }
+      }
+    }
+  }
+}
+
 //LUEGO DE ENCONTRAR CASILLAS ADYACENTES SEGUIR BUSCANDO EN LA DIRECCION QUE CORRESPONDA
 void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_oponente, jugadaPosible plays[]){
   int offset = 1;
-  int l = -1;
+  int l = 0;
   if(direccion == 4){
     while(l < 64){
         if(tab->jugada[l].x == x && tab->jugada[l].y == y - offset){
@@ -552,6 +572,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
     while(l < 64){
         if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y - offset){
           if(y - offset == 0 || x - offset == 0){
+            // printf("fuera de tablero \n");
             break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
             // printf("ficha del jugador actual \n");
@@ -569,17 +590,14 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
     }
   }else if (direccion == 2){
     while(l < 64){
-        // printf("No entiendo nada: %d |\n", l);
         if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y){
-          // printf("x:%d offset: %d \n", x, offset);
           if(x - offset == 0){
-            // printf("fuera de tablero %d \n", l);
+            // printf("fuera de tablero \n");
             break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
             // printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
-            // printf("Encontro la jugada!! %d \n", l);
             savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "vertical+");
             break;
           }else if(tab->jugada[l].ficha == ficha_oponente){
@@ -746,231 +764,6 @@ void findPlay(jugador* player, tablero* tab, int x, int y, jugadaPosible plays[]
     [+1 -1]       | [+1 0]   | [+1 +1]
   */
 }
-
-//VALIDAR QUE LA JUGADA INGRESADA PERTENEZCA A LAS JUGADAS VALIDAS
-//RETORNA la jugada que el usuario ingrese, si es valida
-jugadaPosible validarJugada(jugador* player, jugadaPosible jugadasPosibles[]) {
-  jugadaPosible play;
-  int x, y;
-  bool encontrado = false;
-
-  int showJugadasValidas = 0;
-
-  //si las coordenadas que se ingresan estan en el array de jugadasPosibles, que seria el valor de la casilla vacia, todo OK
-  //sino jugada invalida y que vuela a intentarlo
-  int topeDeIntentos = 5;
-  int i;
-  while(!encontrado && topeDeIntentos > 0){
-    if((strcmp(player->nombre, "cachito") == 0)){
-      printf("Hola cachito!! :)\n");
-    }
-    printf("Turno --> %s \n", player->nombre);
-    printf("ingresa una jugada: \n");
-    scanf("%d%d",
-      &x,
-      &y
-    );
-    
-    if((x > 0 && x < 9) && (y > 0 && y < 9)){
-      for (i = 0; i < 64; i++){
-        if(jugadasPosibles[i].coord_fin[0].x == x && jugadasPosibles[i].coord_fin[0].y == y && jugadasPosibles[i].isPlay == true) {
-          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
-          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
-          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[0].x;
-          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[0].y;
-          strcpy(play.play_direccion[0].direccion, jugadasPosibles[i].play_direccion[0].direccion);
-          encontrado = true;
-        }
-        else if(jugadasPosibles[i].coord_fin[1].x == x && jugadasPosibles[i].coord_fin[1].y == y && jugadasPosibles[i].isPlay == true) {
-          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
-          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
-          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[1].x;
-          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[1].y;
-          strcpy(play.play_direccion[1].direccion, jugadasPosibles[i].play_direccion[1].direccion);
-          encontrado = true;
-        }
-        else if(jugadasPosibles[i].coord_fin[2].x == x && jugadasPosibles[i].coord_fin[2].y == y && jugadasPosibles[i].isPlay == true) {
-          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
-          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
-          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[2].x;
-          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[2].y;
-          strcpy(play.play_direccion[2].direccion, jugadasPosibles[i].play_direccion[2].direccion);
-          encontrado = true;
-        }
-        else if(jugadasPosibles[i].coord_fin[3].x == x && jugadasPosibles[i].coord_fin[3].y == y && jugadasPosibles[i].isPlay == true) {
-          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
-          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
-          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[3].x;
-          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[3].y;
-          strcpy(play.play_direccion[3].direccion, jugadasPosibles[i].play_direccion[3].direccion);
-          encontrado = true;
-        }
-        else if(jugadasPosibles[i].coord_fin[4].x == x && jugadasPosibles[i].coord_fin[4].y == y && jugadasPosibles[i].isPlay == true) {
-          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
-          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
-          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[4].x;
-          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[4].y;
-          strcpy(play.play_direccion[4].direccion, jugadasPosibles[i].play_direccion[4].direccion);
-          encontrado = true;
-        }
-        else if(jugadasPosibles[i].coord_fin[5].x == x && jugadasPosibles[i].coord_fin[5].y == y && jugadasPosibles[i].isPlay == true) {
-          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
-          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
-          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[5].x;
-          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[5].y;
-          strcpy(play.play_direccion[5].direccion, jugadasPosibles[i].play_direccion[5].direccion);
-          encontrado = true;
-        }
-        else if(jugadasPosibles[i].coord_fin[6].x == x && jugadasPosibles[i].coord_fin[6].y == y && jugadasPosibles[i].isPlay == true) {
-          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
-          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
-          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[6].x;
-          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[6].y;
-          strcpy(play.play_direccion[6].direccion, jugadasPosibles[i].play_direccion[6].direccion);
-          encontrado = true;
-        }
-        else if(jugadasPosibles[i].coord_fin[7].x == x && jugadasPosibles[i].coord_fin[7].y == y && jugadasPosibles[i].isPlay == true) {
-          play.coord_inicio.x = jugadasPosibles[i].coord_inicio.x;
-          play.coord_inicio.y = jugadasPosibles[i].coord_inicio.y;
-          play.coord_fin[0].x = jugadasPosibles[i].coord_fin[7].x;
-          play.coord_fin[0].y = jugadasPosibles[i].coord_fin[7].y;
-          strcpy(play.play_direccion[7].direccion, jugadasPosibles[i].play_direccion[7].direccion);
-          encontrado = true;
-        }
-      }
-
-      if(!encontrado){
-        printf("Oops, %d - %d es una casilla invalida :(\n\n", x, y);
-        showJugadasValidas++;
-        if(showJugadasValidas > 2){
-          showPlays(jugadasPosibles);
-          printf("\n\n");
-        }
-      }
-      
-    }else{
-      topeDeIntentos--;
-      break;
-    }
-  }
-
-  //SI LLEGO AL TOPE DE INTENTOS ES PORQUE EL JUGADOR INGRESO CUALQUIER COSA MENOS UN NUMERO :(
-  //y el programa crashea!!
-  if(topeDeIntentos <= 0){
-    printf("Error, saliendo del progama... se ingreso algo que no era un numero\n");
-  }
-
-  //SI LLEGO HASTA ACA EN TEORIA SE INGRESO UNA JUGADA VALIDA, SE DEVUELVE la coordenada original de la ficha
-  return play;
-}
-
-//INGRESAR UNA JUGADA, Y CAMBIAR LAS FICHAS AFECTADAS EN DICHA JUGADA return 1 si OK | return 0 si MAL
-void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], jugador* player) {
-  //conseguir la ficha del jugador actual
-  char ficha = player->ficha;
-
-  int count = 0;
-  jugadaPosible jugadaMultiple[8];
-
-  for (int i = 0; i < 8; i++){//inicializar jugadaMultiple
-    jugadaMultiple[i].coord_inicio.x = 0;
-    jugadaMultiple[i].coord_inicio.y = 0;
-    jugadaMultiple[i].coord_fin[0].x = 0;
-    jugadaMultiple[i].coord_fin[0].y = 0;
-    jugadaMultiple[i].coord_fin[1].x = 0;
-    jugadaMultiple[i].coord_fin[1].y = 0;
-    jugadaMultiple[i].coord_fin[2].x = 0;
-    jugadaMultiple[i].coord_fin[2].y = 0;
-    jugadaMultiple[i].isPlay = false;
-    strcpy(jugadaMultiple[i].play_direccion[0].direccion, "none");
-    strcpy(jugadaMultiple[i].play_direccion[1].direccion, "none");
-    strcpy(jugadaMultiple[i].play_direccion[2].direccion, "none");
-  }
-  
-  int id[8] = {0};
-  // SI las coordenadas de final tienen mas de un origen hay que afectar mas de una direccion, sino... 1 sola direccion
-
-  //SOLO PARA DEBUGEAR - DEJO POR LAS DUDAS
-  //AL SER UNA COORDENADA LA QUE INGRESA EN USUARIO VIENE SIEMPRE EN EL INDEX 0 -> jugada->coord_fin[0]
-  // for (int i = 0; i < count; i++){//count es la cantidad de direcciones que afecta la jugada
-  //   printf("LINEA 591 id de casilla %d\n", id[i]);
-  //   printf("LINEA 592 ORIGEN: [%d - %d]\nDireccion 1|%s| 2|%s| 3|%s|\n", 
-  //     inicio[i].x, 
-  //     inicio[i].y, 
-  //     jugada->play_direccion[0].direccion, 
-  //     jugada->play_direccion[1].direccion,
-  //     jugada->play_direccion[2].direccion);
-  // }
-
-  //en jugada multiple quedan guardadas las jugadas que afecten mas de una LINEA al mismo tiempo, lo que llamare "jugada multiple"
-  getAllOrigins(plays, jugada, jugadaMultiple); 
-
-  //checkeo cuantas jugadas multiples hay, 1, 2 o 3
-  for (int i = 0; i < 8; i++){
-    if(jugadaMultiple[i].isPlay){
-      count++;
-    }
-  }
-
-  //1 direccion | if count == 0
-  int casillasID[8] = { 0 };
-  int count2 = 0; //dependiendo de la cantidad de direcciones que hallan
-
-  for (int i = 0; i < count; i++){
-    obtenerIdDeCasillasAfectadas(
-      &count2,
-      casillasID,
-      tab, 
-      jugadaMultiple[i].play_direccion[0].direccion,
-      jugadaMultiple[i].coord_inicio.x,
-      jugadaMultiple[i].coord_inicio.y,
-      jugadaMultiple[i].coord_fin[0].x,
-      jugadaMultiple[i].coord_fin[0].y
-    );
-
-    for (int i = 0; i < count2; i++){
-      updateFicha(tab, casillasID[i], ficha); //actualizar el tablero
-    }
-  }
-
-
-}
-//INICIAR TABLERO
-void iniciarTablero(tablero* tab){
-  int id = 0;
-  // Inciar el tablero con todas las posiciones en '_'
-  for (int j = 1; j <= 8; j++) {
-      for (int k = 1; k <= 8; k++) {
-          tab->jugada[id].x = j;
-          tab->jugada[id].y = k;
-          tab->jugada[id].ficha = '_';
-          tab->jugada[id].empty = true;
-          id++;
-      }
-  }
-  
-  //colocar fichas en la posicion inicial
-  tab->jugada[27].x = 4;
-  tab->jugada[27].y = 4;
-  tab->jugada[27].ficha = 'O';
-  tab->jugada[27].empty = false;
-
-  tab->jugada[28].x = 4;
-  tab->jugada[28].y = 5;
-  tab->jugada[28].ficha = 'X';
-  tab->jugada[28].empty = false;
-  
-  tab->jugada[35].x = 5;
-  tab->jugada[35].y = 4;
-  tab->jugada[35].ficha = 'X';
-  tab->jugada[35].empty = false;
-
-  tab->jugada[36].x = 5;
-  tab->jugada[36].y = 5;
-  tab->jugada[36].ficha = 'O';
-  tab->jugada[36].empty = false;
-}
-
 //Enumera las jugadas validas para todas las fichas del jugador actual
 void posicionFichas(jugador* player, tablero* tab, jugadaPosible play[]){
   for (int i = 0; i < 64; i++)
@@ -982,7 +775,7 @@ void posicionFichas(jugador* player, tablero* tab, jugadaPosible play[]){
   }
 }
 
-void asignarFicha(jugador* player){//revisar que sea aleatorio realmente
+void asignarFicha(jugador* player){
   int r = rand() % 21;
   char resultFicha = (r > 10) ? 'X' : 'O';
 
@@ -1002,7 +795,6 @@ void crearJugador(jugador player[]) {
     asignarFicha(&player[0]);
     player[0].turno = 0;
     player[0].turnoActual = false;
-    player[0].id = 0;
     printf("Se te asigno la ficha: %c\n", player[0].ficha);
     printf("\n");
 
@@ -1017,7 +809,6 @@ void crearJugador(jugador player[]) {
     scanf("%s", player[1].nombre);
     player[1].turno = 0;
     player[1].turnoActual = false;
-    player[1].id = 1;
     printf("%c\n", player[1].ficha);
     printf("\n");
 }
@@ -1049,7 +840,6 @@ jugador actualizarTurno(jugador player[]){
 
   jugador jugadorVacio;
   strcpy(jugadorVacio.nombre, "none");
-  jugadorVacio.id = -1;
   jugadorVacio.ficha = 'W';
   return jugadorVacio;
 }
@@ -1088,18 +878,18 @@ void renderTablero(tablero* tab){
 }
 
 //MOSTRAR INFO DE TURNO, ETC.
-void showInfo(jugador player[]){
-  printf("%s  %d Ficha: %c | Turno actual: %d\n", 
-    player[0].nombre, 
-    player[0].id, 
-    player[0].ficha, 
+void showInfo(tablero* tab, jugador player[]){
+  printf("%s -> Ficha: %c Cantidad: %d | Turno actual: %d\n", 
+    player[0].nombre,
+    player[0].ficha,
+    contarFichas(tab, player[0].ficha),
     player[0].turno
   );
 
-  printf("%s  %d Ficha: %c | Turno actual: %d\n", 
+  printf("%s -> Ficha: %c Cantidad: %d | Turno actual: %d\n", 
     player[1].nombre, 
-    player[1].id, 
     player[1].ficha, 
+    contarFichas(tab, player[1].ficha),
     player[1].turno
   );
 
@@ -1122,24 +912,20 @@ int main() {
   srand(time(NULL));
 
   printf("\n");
-  printf("Bienvenido :)\n");
-  printf("Al ingresar una jugada primero se ingresa el numero de fila (se presiona enter) y luego el de columna (y se presiona enter nuevamente)...\n");
-  printf("Para las coordenadas ingresa solo numeros... por favor.. \n");
-  printf("Gracias, gracias a ti... no hay de que :)\n\n");
+  printf("Bienvenido..\n");
+  printf("\nPara ingresar una jugada primero se ingresa el numero de fila (se presiona enter) y luego el de columna (y se presiona enter nuevamente)...\n");
+  printf("\nSi se ingresa una jugada invalida 3 veces el programa mostrara un mensaje con las jugadas validas para ese jugador...\n\n");
 
   crearJugador(jugadores);
 
   iniciarTablero(&tab); //INICIA EL TABLERO
 
 //------------------------------------------------------------------------------------------------------------------------- EN JUEGO (LOOP)
-  for (int i = 0; i < 60; i++)
+  for (int i = 0; i < 61; i++)
   {
     printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     printf("Turnos restantes -->> %d\n", turnosRestantes);
     //contar fichas
-    int negras = contarFichas(&tab, 'X');
-    int blancas = contarFichas(&tab, 'O');
-    mostrarConteoFichas(negras, blancas);
 
     iniciarPlays(play); //INICIA LAS JUGADAS VALIDAS EN "0"
     
@@ -1154,29 +940,23 @@ int main() {
       noHayJugada++;
       continue;
     }else if(hayJugadaPosible == 0 && noHayJugada >= 2){
-      printf("Se termino el juego cachito :(... \n");
-      showInfo(jugadores); //con la info de los jugadores
+      printf("Se termino el juego... \n");
+      showInfo(&tab, jugadores); //con la info de los jugadores
       renderTablero(&tab);
       //contar fichas
       int negras = contarFichas(&tab, 'X');
       int blancas = contarFichas(&tab, 'O');
 
-      if(negras > blancas){
-        printf("Ganan las fichas negras.. con %d en el tablero contra %d fichas blancas\n", negras, blancas);
-      }else if(negras < blancas){
-        printf("Ganan las fichas blancas.. con %d en el tablero contra %d fichas negras\n", blancas, negras);
-      }else if(negras == blancas){
-        printf("Empate....  empate?? - negras: %d blancas: %d\n", negras, blancas);
-      }
+      mensajeFinal(negras, blancas);
       break;
     }
-    //----------------------------------------------------------------------------------------------- SI NO HAY JUGADA POSIBLE X2 SE FINIQUITIAMO ACA
+    //----------------------------------------------------------------------------------------------- SI NO HAY JUGADA POSIBLE X2 termina ACA
 
     //MUESTRA LAS JUGADAS VALIDAS
     // showPlays(play); 
 
     //MUESTRA EL ESTADO ACTUAL DEL TABLERO
-    showInfo(jugadores); //con la info de los jugadores
+    showInfo(&tab, jugadores); //con la info de los jugadores
     renderTablero(&tab);
     printf("\n\n");
 
@@ -1187,20 +967,14 @@ int main() {
     ingresarJugada(&tab, &jugada, play, &player);
 
     if(i == 60){
-      printf("Se terminaron los turnos.... :( saliendo...\n");
-      showInfo(jugadores); //con la info de los jugadores
+      printf("Se terminaron los turnos.... saliendo...\n");
+      showInfo(&tab, jugadores); //con la info de los jugadores
       renderTablero(&tab);
       
       int negras = contarFichas(&tab, 'X');
       int blancas = contarFichas(&tab, 'O');
 
-      if(negras > blancas){
-        printf("Ganan las fichas negras.. con %d en el tablero contra %d fichas blancas\n", negras, blancas);
-      }else if(negras < blancas){
-        printf("Ganan las fichas blancas.. con %d en el tablero contra %d fichas negras\n", blancas, negras);
-      }else if(negras == blancas){
-        printf("Empate....  empate?? - negras: %d blancas: %d\n", negras, blancas);
-      }
+      mensajeFinal(negras, blancas);
       break;
     }
 
