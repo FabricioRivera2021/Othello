@@ -506,7 +506,7 @@ void obtenerIdDeCasillasAfectadas(int* count2, int resultado[], tablero* tab, ch
 //LUEGO DE ENCONTRAR CASILLAS ADYACENTES SEGUIR BUSCANDO EN LA DIRECCION QUE CORRESPONDA
 void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_oponente, jugadaPosible plays[]){
   int offset = 1;
-  int l = 0;
+  int l = -1;
   if(direccion == 4){
     while(l < 64){
         if(tab->jugada[l].x == x && tab->jugada[l].y == y - offset){
@@ -523,7 +523,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
             offset++;
-            l = 0;
+            l = -1;
           }
         }
     l++;
@@ -543,7 +543,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
             offset++;
-            l = 0;
+            l = -1;
           }
         }
     l++;
@@ -552,7 +552,6 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
     while(l < 64){
         if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y - offset){
           if(y - offset == 0 || x - offset == 0){
-            // printf("fuera de tablero \n");
             break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
             // printf("ficha del jugador actual \n");
@@ -563,27 +562,30 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
             offset++;
-            l = 0;
+            l = -1;
           }
         }
     l++;
     }
   }else if (direccion == 2){
     while(l < 64){
+        // printf("No entiendo nada: %d |\n", l);
         if(tab->jugada[l].x == x - offset && tab->jugada[l].y == y){
+          // printf("x:%d offset: %d \n", x, offset);
           if(x - offset == 0){
-            // printf("fuera de tablero \n");
+            // printf("fuera de tablero %d \n", l);
             break; //fuera de tablero. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == ficha){
             // printf("ficha del jugador actual \n");
             break; //ficha igual al del jugador. no hay jugada PARAR
           }else if(tab->jugada[l].ficha == '_'){
+            // printf("Encontro la jugada!! %d \n", l);
             savePlays(plays, l, x, y, tab->jugada[l].x, tab->jugada[l].y, "vertical+");
             break;
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
             offset++;
-            l = 0;
+            l = -1;
           }
         }
     l++;
@@ -603,7 +605,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
             offset++;
-            l = 0;
+            l = -1;
           }
         }
     l++;
@@ -623,7 +625,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
             offset++;
-            l = 0;
+            l = -1;
           }
         }
     l++;
@@ -643,7 +645,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
             offset++;
-            l = 0;
+            l = -1;
           }
         }
     l++;
@@ -663,7 +665,7 @@ void find(tablero* tab, int x, int y, int direccion, char ficha, char ficha_opon
           }else if(tab->jugada[l].ficha == ficha_oponente){
             //Ficha oponente encontrada en %d %d, seguir buscando
             offset++;
-            l = 0;
+            l = -1;
           }
         }
     l++;
@@ -1121,7 +1123,8 @@ int main() {
 
   printf("\n");
   printf("Bienvenido :)\n");
-  printf("para ingresar una jugada primero se ingresa el numero de fila (se presiona enter) y luego el de columna (y se presiona enter nuevamente)...\n");
+  printf("Al ingresar una jugada primero se ingresa el numero de fila (se presiona enter) y luego el de columna (y se presiona enter nuevamente)...\n");
+  printf("Para las coordenadas ingresa solo numeros... por favor.. \n");
   printf("Gracias, gracias a ti... no hay de que :)\n\n");
 
   crearJugador(jugadores);
@@ -1129,7 +1132,7 @@ int main() {
   iniciarTablero(&tab); //INICIA EL TABLERO
 
 //------------------------------------------------------------------------------------------------------------------------- EN JUEGO (LOOP)
-  for (int i = 0; i < 61; i++)
+  for (int i = 0; i < 60; i++)
   {
     printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     printf("Turnos restantes -->> %d\n", turnosRestantes);
