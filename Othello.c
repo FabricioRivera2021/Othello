@@ -921,7 +921,7 @@ int main() {
   iniciarTablero(&tab); //INICIA EL TABLERO
 
 //------------------------------------------------------------------------------------------------------------------------- EN JUEGO (LOOP)
-  for (int i = 0; i < 61; i++)
+  for (int i = 0; i < 60; i++)
   {
     printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     printf("Turnos restantes -->> %d\n", turnosRestantes);
