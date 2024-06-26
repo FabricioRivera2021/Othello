@@ -408,7 +408,7 @@ void ingresarJugada(tablero* tab, jugadaPosible* jugada, jugadaPosible plays[], 
   //en jugada multiple quedan guardadas las jugadas que afecten mas de una LINEA al mismo tiempo, lo que llamare "jugada multiple"
   getAllOrigins(plays, jugada, jugadaMultiple); 
 
-  //checkeo cuantas jugadas multiples hay, 1, 2 o 3
+  //checkeo cuantas jugadas multiples hay
   for (int i = 0; i < 8; i++){
     if(jugadaMultiple[i].isPlay){
       count++;
